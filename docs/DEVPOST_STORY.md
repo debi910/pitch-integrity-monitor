@@ -49,12 +49,15 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
 | **False alarms** | 27 alerts in three seasons, $\approx 1.08$ a month across all of MLB. |
 | **Live** | Would have flagged May 2025 on **June 1, 2025**, about a month before he was placed on leave. |
 | **Detection limit** | $P(\text{alert}) \ge 0.5$ needs $r \approx 6$ rigged first pitches a month for a reliever and $r \approx 9$ for a starter. |
+| **No hand-picked cut-off** | Averaged over 11 cut-offs, May 2025 ranks **#38 of 8,339** (top 0.5%), and it stays in the top 2.3% at every single cut-off. |
 | **Honest miss** | Caught **1 of 7** named months; sparse fixes do not move a monthly rate. |
+| **Coach mode** | Our drift score ties a simple velocity-drop rule: ROC AUC $0.553$ ($0.532$–$0.572$) vs $0.558$. Reported, **not shipped**. |
 
 ## Challenges we ran into
 
 - **Our first model lost.** We kept the negative result on the front page and moved from single pitches to monthly patterns.
 - **Real pitchers are bursty.** We saw 27 alerts where a binomial null expects $4.4$. A beta-binomial null cuts the alerts to 3 and moves May 2025 up to #12, but its score ($2.55$) falls just short of the alert threshold. So we present a *ranked review list*, not an alarm.
+- **A second honest null.** Our coach-mode injury warning tied a one-line velocity rule ($\Delta	ext{AUC} = -0.005$, 95% CI $-0.020$ to $+0.009$), so we kept it out of the product.
 - **Labels are allegations,** with $n = 18$ positives, so every interval is wide; we report them. One pitch number (Vavra) is ambiguous.
 - **Ethics.** Alerts are anonymised everywhere except for the two charged pitchers, and the CLI hides names by default.
 
@@ -66,7 +69,7 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
 
 ## What we learned
 
-A single rigged pitch is statistically invisible. A pattern is visible only above roughly 6–9 pitches a month. And the false-alarm rate matters more than any headline accuracy.
+A single rigged pitch is statistically invisible. A pattern is visible only above roughly 6–9 pitches a month. The false-alarm rate matters more than any headline accuracy. And a simple baseline can win: velocity alone already carries what public pitch data says about injury risk.
 
 ## What's next
 
