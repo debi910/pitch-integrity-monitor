@@ -12,3 +12,5 @@
 - Pivot: pattern monitor (`pim/monitor.py`), template taken from the DOJ indictment text (first pitch, ball in the dirt). Frozen before the league-wide eval.
 - Streamlit app (`app.py`), lean app requirements, golden-path tests (no look-ahead, labels matched, baseline sanity, monitor volume).
 - UI rebuild: animated story page (`web/template.html` -> `docs/index.html` via `scripts/build_web.py`, d3 v7.9.0 inlined), embedded in Streamlit; upload tab kept.
+- Full-league pull complete: 2023 = 732,562 pitches (2,471 games), 2024 = 724,767 (2,472), 2025 = 726,773 (2,477), regular season + postseason. Slim zstd copies in `data/slim/statcast_{year}.parquet` (16.8 / 17.3 / 17.4 MB). Clase counts in league data match the per-pitcher pull (1,133 / 1,115 / 754).
+- Added CC-licensed Wikimedia Commons photos in `web/img/` with `CREDITS.md`.
