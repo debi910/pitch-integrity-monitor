@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- Ran the pre-registered injury test (`eval/injury.py`, IL data from StatsAPI via laptop, ffa63ce). Drift AUC 0.553 vs velocity-drop 0.558 (diff −0.005, CI −0.020 to +0.009): ties the simple rule, reported on page (06 Method) and README, not shipped as a feature.
 - PRE-REGISTRATION (coach mode): `pim/drift.py` (command + velocity drift vs own earlier months) and `eval/injury.py` (does drift precede an IL placement within 30 days? vs velocity-drop baseline) committed BEFORE any injured-list data was joined. Constants fixed here.
 - Linked deck, model card, data card, CI badge and CLI usage from README and page footer.
 - Analyst case file (section 03): the alert the live monitor would have issued on June 1 2025, with the 9 dirt first pitches, filing tags, Savant game links, next steps, innocent explanations, CSV export.

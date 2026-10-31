@@ -68,6 +68,22 @@ pitches each, which is why the monitor caught only one. Past about six a month t
 stricter beta-binomial alarm a reliever needs 7 (50%) to 10 (90%). Performance data alone cannot stop small fixes, but it
 caps how greedy a fixer can be and tells an integrity desk when to pull betting records.
 
+**Coach mode, tested and not shipped** (pre-registered at `4eb6f84` before any injured-list data was joined;
+`pim/drift.py`, `eval/injury.py` → `results/injury.json`). Can the same pitcher-vs-himself engine warn a coach before an
+injury? We scored 7,070 pitcher-months (live mode) on command drift plus fastball-velocity drop, labelled by an IL placement
+within 30 days (5,337 StatsAPI IL transactions; 1,088 positive months, 15%).
+
+| Method | ROC AUC (95% CI, pitcher-clustered) | Lift in top 5% |
+|---|---|---|
+| Drift (command + velocity), ours | 0.553 (0.532–0.572) | 1.49× |
+| **Velocity drop alone** (simple) | **0.558** (0.537–0.580) | 1.52× |
+| Command drift alone | 0.519 (0.499–0.540) | 1.01× |
+| Random | 0.502 | 0.99× |
+
+Ours minus velocity: −0.005 AUC (−0.020 to +0.009). It ties the simple rule, so we do not ship it as a feature: for coaches,
+fastball velocity already carries what public pitch data can say about injury risk. Post-hoc, restricting to arm injuries
+(elbow, shoulder, forearm, etc.) gives 0.573 vs 0.575, the same picture.
+
 1. **One pitch is not enough.** Our pre-registered pitch-level model (frozen in git at `5fa3b3e` before we looked
    at label ranks) ranked the 18 named pitches *worse* than a one-line "spiked ball" rule. A third of the named
    pitches were not balls at all, so no location rule could see them.

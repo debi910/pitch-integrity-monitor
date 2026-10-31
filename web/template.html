@@ -342,6 +342,9 @@ svg text{font-family:var(--sans)}
       <p>Did #22 depend on one lucky setting? We re-ran the whole league under 27 settings. Each square is the rank of Clase's May 2025 among all pitcher-months; darker is higher. The frozen setting is outlined.</p>
       <div id="robust" class="robust"></div>
       <p id="robustNote" class="muted" style="margin-top:12px"></p></details>
+    <details><summary>Coach mode: tested, not shipped</summary>
+      <p>Could the same "judge him against himself" engine warn a pitching coach before an injury? We pre-registered the test in git (commit 4eb6f84) before joining any injured-list data, then scored 7,070 pitcher-months on command drift plus fastball-velocity drop and asked which months came within 30 days of an IL placement (1,088 did, 15%).</p>
+      <p><b>It did not beat the simple rule.</b> AUC 0.553 (95% CI 0.532–0.572) against 0.558 for velocity drop alone; difference −0.005 (−0.020 to +0.009). Command drift on its own was near random (0.519). The top 5% of drift months were 1.5× more likely to precede an IL stint, the same lift as watching velocity. So for coaches the honest advice is: <b>watch fastball velocity</b>; public location data adds nothing measurable on top. We report it rather than ship a feature that doesn't earn its place.</p></details>
     <details><summary>Honest limitations</summary><ul>
       <li>Only 18 labelled pitches, so intervals are wide.</li>
       <li>We designed v2 after seeing the 18 labels. The league test is the honest check, because it is dominated by pitchers the template never saw.</li>
