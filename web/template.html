@@ -174,6 +174,9 @@ svg text{font-family:var(--sans)}
 @media (max-width:900px){.grid2,.hero-grid{grid-template-columns:1fr}.hero-art{max-width:420px}.stats{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.verdict{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr 1fr}}
 @media (max-width:560px){.wrap{padding:0 16px}.cards{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}.brand{display:none}nav .links{margin-left:0}section{padding:80px 0}.stats{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none;filter:none}}
+.robust{display:flex;gap:28px;flex-wrap:wrap;margin-top:14px}.robust .g{display:grid;grid-template-columns:auto repeat(3,52px);gap:4px;font-size:12px;align-items:center}
+.robust .g b{grid-column:1/-1;font-size:13px;margin-bottom:4px}.robust .c{height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-weight:600}
+.robust .c.f{outline:2px solid #16181C;outline-offset:1px}.robust .h{color:#5E636B;text-align:center}
 </style>
 </head>
 <body>
@@ -314,6 +317,10 @@ svg text{font-family:var(--sans)}
       <li>Nothing simulated or mocked.</li></ul></details>
     <details><summary>Pitch model (v1)</summary><p>For each pitch: how rare its location is for that pitch type and batter side, how often he picks that pitch in that count, and how unusual its speed is. Each is compared only with his <b>earlier games</b> (no look-ahead, tested), then combined with Fisher's method. Frozen at commit 5fa3b3e before evaluation.</p></details>
     <details><summary>Pattern monitor (v2)</summary><p>Template from the indictment's own words: first pitch of an at-bat, taken for a ball, more than 30% of the zone height below the bottom. Each pitcher-month with 20+ first pitches is scored with a binomial tail test against his own rate in his other months, shrunk toward the league rate. Score = −log10 p.</p></details>
+    <details open><summary>Stress test (post-hoc, after the frozen result)</summary>
+      <p>Did #22 depend on one lucky setting? We re-ran the whole league under 27 settings. Each square is the rank of Clase's May 2025 among all pitcher-months; darker is higher. The frozen setting is outlined.</p>
+      <div id="robust" class="robust"></div>
+      <p id="robustNote" class="muted" style="margin-top:12px"></p></details>
     <details><summary>Honest limitations</summary><ul>
       <li>Only 18 labelled pitches, so intervals are wide.</li>
       <li>We designed v2 after seeing the 18 labels. The league test is the honest check, because it is dominated by pitchers the template never saw.</li>
@@ -698,6 +705,21 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
     Object.entries(M).map(([k,v]) => `<tr class="${k.startsWith('score')?'ours':''} ${k===best?'best':''}"><td>${lab[k]}</td><td class="n">${v.avg_precision.toFixed(3)}</td><td class="n">${v.positives_in_top1pct} / ${L.n_positive_months}</td><td class="n">${may(v.positive_ranks)!=null?'#'+fmt(may(v.positive_ranks)):'–'}</td><td class="n">#${fmt(d3.min(Object.values(v.positive_ranks)))}</td></tr>`).join('') + `</tbody></table>`;
   const a3 = L.alerts['score_audit>=3.0'];
   document.getElementById('league-callout').innerHTML = `<b>The trade-off in one line:</b> at p ≤ 0.001 the monitor raises <b class="num">${a3.per_month_league_wide}</b> alerts a month across all of MLB (chance alone would give about <span class="num">${(a3.expected_by_chance_if_binomial/nMonths).toFixed(1)}</span>), and catches <b>${a3.flagged_named_cells} of ${L.n_positive_months}</b> named months. Small enough for one analyst to review, but it only sees a scheme while it is dense.`;
+})();
+
+/* ---------- robustness grid ---------- */
+(function(){ const R = DATA.robust, el = document.getElementById('robust'); if (!R || !el) { el && el.closest('details').remove(); return; }
+  const col = d3.scaleSequential(t => d3.interpolateRgb('#F3E6CF', '#C8322B')(t)).domain([Math.log(200), Math.log(20)]);
+  [-0.2,-0.3,-0.4].forEach(z => { const g = document.createElement('div'); g.className='g';
+    g.innerHTML = `<b>Dirt threshold ${Math.round(-z*100)}% below zone</b><span></span>` + [50,150,400].map(k=>`<span class="h">shrink ${k}</span>`).join('');
+    [15,20,30].forEach(n => { g.innerHTML += `<span class="h" style="text-align:right;padding-right:6px">n≥${n}</span>`;
+      [50,150,400].forEach(k => { const c = R.grid.find(r => r.spike_z===z && r.min_first_pitches===n && r.shrink===k), rk = c.rank_clase_2025_05;
+        const f = z===R.frozen.spike_z && n===R.frozen.min_first_pitches && k===R.frozen.shrink;
+        g.innerHTML += `<span class="c${f?' f':''}" title="${fmt(c.alerts)} alerts league-wide; raw-rate rank #${c.rank_raw_rate}" style="background:${col(Math.log(Math.min(200,rk)))};color:${rk<60?'#fff':'#16181C'}">#${rk}</span>`; }); });
+    el.appendChild(g); });
+  const S = R.summary, B = R.beta_binomial;
+  document.getElementById('robustNote').innerHTML = `Volume floor and shrinkage barely matter (#22–#26 at the 30% threshold). <b>The dirt threshold does</b>: at 20% or 40% the month falls to #76–#168. Alerts stay at ${S.alerts_range[0]}–${S.alerts_range[1]} across all 27. ` +
+    `A null that allows normal month-to-month wobble (beta-binomial, ρ=${B.rho.toFixed(4)}) cuts alerts from 27 to <b>${B.alerts}</b> (${B.expected_alerts_under_null} expected by chance) and moves Clase up to <b>#${B.rank_clase_2025_05}</b>, but his month then scores ${B.score_clase_2025_05}, just short of the alert line. So it is a ranked review list, not an alarm.`;
 })();
 </script>
 </body>

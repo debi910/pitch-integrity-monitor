@@ -95,6 +95,9 @@ def main():
     else:
         out["cells"] = None
 
+    rob = ROOT / "results/robustness.json"
+    out["robust"] = json.loads(rob.read_text()) if rob.exists() else None
+
     html = (ROOT / "web/template.html").read_text(encoding="utf-8")
     html = html.replace("/*__DATA__*/null", json.dumps(out, separators=(",", ":")))
     html = html.replace("/*__D3__*/", (ROOT / "web/vendor/d3.min.js").read_text(encoding="utf-8"))  # d3 v7.9.0, ISC

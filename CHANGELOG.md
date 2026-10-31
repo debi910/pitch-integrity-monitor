@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- 2026-10-31: Post-hoc stress test (`eval/robustness.py`): 27 settings plus a beta-binomial null. Frozen #22 holds across volume floor and shrinkage, not across the dirt threshold; calibrated null gives 3 alerts (5.2 expected), Clase #12 but below the alert line. Shown on the page (06 Method) and in README. Tests: 4 → 8 (template rule, spike month, live mode, no other names).
 - Project setup: Python 3.13.3 venv, pinned requirements (pybaseball 2.2.7, pandas 3.1.0, pyarrow 26.0.0, numpy 2.5.4, scikit-learn 1.9.1, streamlit 1.66.1, plotly 7.1.0), `.gitignore` (raw data excluded).
 - Looked up MLBAM ids: Emmanuel Clase = 661403, Luis L. Ortiz (CLE 2025) = 682847.
 - Added `data/labels/court_named_pitches.csv`: 18 Clase pitches and 2 Ortiz game-level rows, as alleged in the Sept 18 2026 EDNY filing (case 25-CR-346), per SBD/TSN reporting. These are allegations, not findings.

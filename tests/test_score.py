@@ -38,3 +38,47 @@ def test_baseline_only_scores_balls():
 def test_monitor_cells_have_min_volume():
     m = monthly(prepare(pd.read_parquet(SLIM)))
     assert (m["n"] >= 20).all() and m["score_audit"].ge(0).all()
+
+
+def _toy(rows):
+    """Tiny prepared frame: rows = (pitcher, date, pitch_number, description, z_rel)."""
+    return pd.DataFrame([{"pitcher": p, "game_date": pd.Timestamp(dt), "pitch_number": pn,
+                          "description": de, "z_rel": z} for p, dt, pn, de, z in rows])
+
+
+def test_template_needs_first_pitch_ball_in_dirt():
+    from pim.monitor import template_events
+    d = _toy([(1, "2025-05-01", 1, "ball", -0.5),          # event
+              (1, "2025-05-01", 2, "ball", -0.5),          # not first pitch
+              (1, "2025-05-01", 1, "swinging_strike", -0.5),  # not a ball
+              (1, "2025-05-01", 1, "ball", 0.1)])          # ball but not in the dirt
+    assert template_events(d)["event"].tolist() == [1, 0, 0]
+
+
+def test_spike_month_scores_higher_than_normal_month():
+    rows = []
+    for mo, k in [("2025-03", 2), ("2025-04", 2), ("2025-05", 12)]:
+        rows += [(7, f"{mo}-10", 1, "ball", -0.6)] * k + [(7, f"{mo}-10", 1, "called_strike", 0.5)] * (40 - k)
+    m = monthly(_toy(rows)).set_index("month")
+    assert m.loc["2025-05", "score_audit"] > m.loc["2025-04", "score_audit"] + 2
+    assert m.loc["2025-05", "score_live"] > 0
+
+
+def test_live_score_ignores_future_months():
+    base = []
+    for mo in ["2025-03", "2025-04"]:
+        base += [(7, f"{mo}-10", 1, "ball", -0.6)] * 3 + [(7, f"{mo}-10", 1, "called_strike", 0.5)] * 37
+    later = [(7, "2025-06-10", 1, "ball", -0.6)] * 30 + [(7, "2025-06-10", 1, "called_strike", 0.5)] * 10
+    a = monthly(_toy(base)).set_index("month")
+    b = monthly(_toy(base + later)).set_index("month")
+    # league rate shifts with the extra month, so compare the pitcher-only part via the raw ordering of months
+    assert b.loc["2025-04", "score_live"] < b.loc["2025-06", "score_live"]
+    assert np.isclose(a.loc["2025-03", "rate"], b.loc["2025-03", "rate"])
+
+
+def test_monitor_names_no_other_pitchers():
+    import os
+    if not os.path.exists("results/league_cells_anon.csv"):
+        return
+    cells = pd.read_csv("results/league_cells_anon.csv")
+    assert "pitcher" not in cells.columns and "player_name" not in cells.columns

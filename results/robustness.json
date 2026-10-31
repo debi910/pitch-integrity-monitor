@@ -1,0 +1,325 @@
+{
+  "frozen": {
+    "spike_z": -0.3,
+    "min_first_pitches": 20,
+    "shrink": 150.0
+  },
+  "grid": [
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 15,
+      "shrink": 50,
+      "cells": 8958,
+      "rank_clase_2025_05": 84,
+      "rank_raw_rate": 166,
+      "alerts": 35,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 15,
+      "shrink": 150,
+      "cells": 8958,
+      "rank_clase_2025_05": 85,
+      "rank_raw_rate": 166,
+      "alerts": 33,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 15,
+      "shrink": 400,
+      "cells": 8958,
+      "rank_clase_2025_05": 97,
+      "rank_raw_rate": 166,
+      "alerts": 31,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 20,
+      "shrink": 50,
+      "cells": 8339,
+      "rank_clase_2025_05": 78,
+      "rank_raw_rate": 132,
+      "alerts": 31,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 20,
+      "shrink": 150,
+      "cells": 8339,
+      "rank_clase_2025_05": 80,
+      "rank_raw_rate": 132,
+      "alerts": 30,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 20,
+      "shrink": 400,
+      "cells": 8339,
+      "rank_clase_2025_05": 92,
+      "rank_raw_rate": 132,
+      "alerts": 28,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 30,
+      "shrink": 50,
+      "cells": 7157,
+      "rank_clase_2025_05": 76,
+      "rank_raw_rate": 86,
+      "alerts": 30,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 30,
+      "shrink": 150,
+      "cells": 7157,
+      "rank_clase_2025_05": 77,
+      "rank_raw_rate": 86,
+      "alerts": 29,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.2,
+      "min_first_pitches": 30,
+      "shrink": 400,
+      "cells": 7157,
+      "rank_clase_2025_05": 89,
+      "rank_raw_rate": 86,
+      "alerts": 27,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 15,
+      "shrink": 50,
+      "cells": 8958,
+      "rank_clase_2025_05": 26,
+      "rank_raw_rate": 48,
+      "alerts": 31,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 15,
+      "shrink": 150,
+      "cells": 8958,
+      "rank_clase_2025_05": 22,
+      "rank_raw_rate": 48,
+      "alerts": 27,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 15,
+      "shrink": 400,
+      "cells": 8958,
+      "rank_clase_2025_05": 23,
+      "rank_raw_rate": 48,
+      "alerts": 31,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 20,
+      "shrink": 50,
+      "cells": 8339,
+      "rank_clase_2025_05": 25,
+      "rank_raw_rate": 31,
+      "alerts": 29,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 20,
+      "shrink": 150,
+      "cells": 8339,
+      "rank_clase_2025_05": 22,
+      "rank_raw_rate": 31,
+      "alerts": 27,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 20,
+      "shrink": 400,
+      "cells": 8339,
+      "rank_clase_2025_05": 23,
+      "rank_raw_rate": 31,
+      "alerts": 31,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 30,
+      "shrink": 50,
+      "cells": 7157,
+      "rank_clase_2025_05": 23,
+      "rank_raw_rate": 17,
+      "alerts": 27,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 30,
+      "shrink": 150,
+      "cells": 7157,
+      "rank_clase_2025_05": 22,
+      "rank_raw_rate": 17,
+      "alerts": 27,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.3,
+      "min_first_pitches": 30,
+      "shrink": 400,
+      "cells": 7157,
+      "rank_clase_2025_05": 23,
+      "rank_raw_rate": 17,
+      "alerts": 30,
+      "named_months_alerted": 1,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 15,
+      "shrink": 50,
+      "cells": 8958,
+      "rank_clase_2025_05": 168,
+      "rank_raw_rate": 158,
+      "alerts": 31,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 15,
+      "shrink": 150,
+      "cells": 8958,
+      "rank_clase_2025_05": 154,
+      "rank_raw_rate": 158,
+      "alerts": 26,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 15,
+      "shrink": 400,
+      "cells": 8958,
+      "rank_clase_2025_05": 136,
+      "rank_raw_rate": 158,
+      "alerts": 30,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 20,
+      "shrink": 50,
+      "cells": 8339,
+      "rank_clase_2025_05": 159,
+      "rank_raw_rate": 120,
+      "alerts": 29,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 20,
+      "shrink": 150,
+      "cells": 8339,
+      "rank_clase_2025_05": 145,
+      "rank_raw_rate": 120,
+      "alerts": 25,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 20,
+      "shrink": 400,
+      "cells": 8339,
+      "rank_clase_2025_05": 130,
+      "rank_raw_rate": 120,
+      "alerts": 30,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 30,
+      "shrink": 50,
+      "cells": 7157,
+      "rank_clase_2025_05": 141,
+      "rank_raw_rate": 75,
+      "alerts": 28,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 30,
+      "shrink": 150,
+      "cells": 7157,
+      "rank_clase_2025_05": 127,
+      "rank_raw_rate": 75,
+      "alerts": 24,
+      "named_months_alerted": 0,
+      "named_months": 7
+    },
+    {
+      "spike_z": -0.4,
+      "min_first_pitches": 30,
+      "shrink": 400,
+      "cells": 7157,
+      "rank_clase_2025_05": 117,
+      "rank_raw_rate": 75,
+      "alerts": 28,
+      "named_months_alerted": 0,
+      "named_months": 7
+    }
+  ],
+  "beta_binomial": {
+    "rho": 0.005940406561363005,
+    "alerts": 3,
+    "expected_alerts_under_null": 5.2,
+    "rank_clase_2025_05": 12,
+    "score_clase_2025_05": 2.55,
+    "named_months_alerted": 0
+  },
+  "summary": {
+    "settings": 27,
+    "clase_top50": 9,
+    "beats_raw_rate": 16,
+    "best_rank": 22,
+    "worst_rank": 168,
+    "alerts_range": [
+      24,
+      35
+    ]
+  }
+}

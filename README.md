@@ -34,6 +34,19 @@ null would give 4.4, so real pitchers are burstier than the model assumes. It ca
 (Clase, May 2025: 9 of 41 first pitches in the dirt vs his 6.1% baseline). The live version would have flagged it on
 June 1 2025, about a month before he was placed on leave. It is silent on 2023 and on Ortiz.
 
+**Stress test** (post-hoc, after the frozen result; `eval/robustness.py` → `results/robustness.json`). Clase May 2025
+across 27 settings (dirt threshold × volume floor × shrinkage):
+
+| Dirt threshold | Rank range | Beats raw rate? |
+|---|---|---|
+| 30% below zone (frozen) | **#22 – #26** | 7 of 9 settings |
+| 20% below zone | #76 – #97 | 9 of 9 |
+| 40% below zone | #117 – #168 | 0 of 9 |
+
+Volume floor and shrinkage barely matter; the dirt threshold does, and we say so. Alerts stay at 24–35 in every
+setting. Replacing the binomial with a **beta-binomial null** (fitted to the league's normal month-to-month wobble,
+ρ = 0.0059) cuts alerts from 27 to **3** (5.2 expected by chance) and moves Clase May 2025 up to **#12**, but its score
+(2.55) then falls just short of p ≤ 0.001. Read the monitor as a ranked review list, not an alarm.
 
 1. **One pitch is not enough.** Our pre-registered pitch-level model (frozen in git at `5fa3b3e` before we looked
    at label ranks) ranked the 18 named pitches *worse* than a one-line "spiked ball" rule. A third of the named
@@ -78,7 +91,7 @@ scripts/build_web.py ──► docs/index.html (story page, d3, photos inlined) 
 pip install -r requirements.txt          # app + evals
 streamlit run app.py                      # the app (works with the committed slim data)
 pip install -r requirements-pipeline.txt && python scripts/pull_statcast.py && python scripts/make_slim.py 2023 2024 2025
-python eval/within_pitcher.py && python eval/league_monitor.py && pytest -q
+python eval/within_pitcher.py && python eval/league_monitor.py && python eval/robustness.py && pytest -q
 ```
 
 ## Data
