@@ -10,8 +10,9 @@
 <script>/*__D3__*/</script>
 <style>
 :root{
-  --bg:#0B0D10; --surface:#12151A; --surface-2:#171B21; --line:#232830; --ink:#ECE8DF; --muted:#8A909A; --faint:#5A606A;
-  --amber:#F5B841; --amber-dim:rgba(245,184,65,.14); --red:#FF6B5A; --teal:#5CC8B8; --teal-dim:rgba(92,200,184,.12);
+  --bg:#F7F4EE; --surface:#FFFFFF; --surface-2:#F1EDE5; --line:#E3DDD1; --ink:#16181C; --muted:#5E636B; --faint:#9A9EA5;
+  --amber:#D9860B; --amber-dim:rgba(217,134,11,.12); --red:#C8322B; --teal:#2E7D5B; --teal-dim:rgba(46,125,91,.11);
+  --dirt:#C9A27A; --grass:#3F7D4E; --shadow:0 1px 2px rgba(22,24,28,.04),0 8px 24px rgba(22,24,28,.06);
   --ease-out:cubic-bezier(.23,1,.32,1); --ease-in-out:cubic-bezier(.77,0,.175,1);
   --serif:"Instrument Serif",Georgia,serif; --sans:Inter,system-ui,-apple-system,Segoe UI,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
@@ -24,14 +25,20 @@ a:hover{text-decoration-color:var(--amber)}
 .num{font-variant-numeric:tabular-nums}
 .mono{font-family:var(--mono)}
 /* nav */
-nav{position:sticky;top:0;z-index:20;background:rgba(11,13,16,.78);backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:24px;height:56px}
+nav{position:sticky;top:0;z-index:20;background:rgba(247,244,238,.82);backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:24px;height:60px}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--red);transform-origin:left;transform:scaleX(0);width:100%}
+nav .links{position:relative}
+nav .links .ind{position:absolute;top:0;bottom:0;border-radius:8px;background:var(--surface);box-shadow:var(--shadow);border:1px solid var(--line);transition:left .28s var(--ease-out),width .28s var(--ease-out),opacity .2s ease;opacity:0;z-index:0}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;letter-spacing:.01em;white-space:nowrap}
 .brand-mark{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--amber);position:relative}
 .brand-mark:after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--amber)}
 nav .links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
-nav .links a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap;transition:color .2s ease,background-color .2s ease}
-nav .links a:hover,nav .links a.on{color:var(--ink);background:var(--surface-2)}
+nav .links button{position:relative;z-index:1;border:0;background:none;cursor:pointer;font-size:13px;color:var(--muted);padding:7px 12px;border-radius:8px;white-space:nowrap;display:flex;gap:7px;align-items:center;transition:color .2s ease,transform .16s var(--ease-out)}
+nav .links button:active{transform:scale(.97)}
+nav .links button span{font:500 10.5px var(--mono);color:var(--faint)}
+nav .links button:hover,nav .links button.on{color:var(--ink)}
+nav .links button.on span{color:var(--red)}
 /* type */
 .eyebrow{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;display:flex;gap:10px;align-items:center}
 .eyebrow:before{content:"";width:18px;height:1px;background:var(--amber)}
@@ -53,7 +60,7 @@ section{padding:112px 0;border-bottom:1px solid var(--line)}
 .verdict{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .vcard{border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,var(--surface),var(--bg))}
 .vicon{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 15px var(--sans)}
-.vicon.no{background:rgba(255,107,90,.12);color:var(--red)} .vicon.yes{background:var(--teal-dim);color:var(--teal)}
+.vicon.no{background:rgba(200,50,43,.1);color:var(--red)} .vicon.yes{background:var(--teal-dim);color:var(--teal)}
 .vcard p{margin:2px 0 0;color:var(--muted);font-size:14px}
 /* generic */
 .grid2{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;margin-top:48px;align-items:start}
@@ -61,22 +68,22 @@ section{padding:112px 0;border-bottom:1px solid var(--line)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px;align-items:center}
 .hero-art{position:relative}
 .hero-art .cap{font:500 11px var(--mono);color:var(--faint);letter-spacing:.06em;text-align:center;margin-top:6px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
 .panel-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em;margin-bottom:10px}
 .chip{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--mono);padding:6px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .chip.amber{color:var(--amber);border-color:rgba(245,184,65,.4);background:var(--amber-dim)}
 .chip.teal{color:var(--teal);border-color:rgba(92,200,184,.35);background:var(--teal-dim)}
-.chip.red{color:var(--red);border-color:rgba(255,107,90,.35);background:rgba(255,107,90,.1)}
+.chip.red{color:var(--red);border-color:rgba(200,50,43,.3);background:rgba(200,50,43,.08)}
 button{font:inherit;color:inherit}
 .seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;position:relative}
 .seg button{position:relative;z-index:1;border:0;background:none;padding:8px 14px;border-radius:7px;font-size:13px;color:var(--muted);cursor:pointer;transition:color .2s ease,transform .16s var(--ease-out)}
 .seg button:active{transform:scale(.97)}
-.seg button.on{color:var(--bg)}
+.seg button.on{color:#fff}
 .seg .thumb{position:absolute;z-index:0;top:3px;bottom:3px;border-radius:7px;background:var(--ink);transition:left .26s var(--ease-out),width .26s var(--ease-out)}
-.tip{position:fixed;pointer-events:none;z-index:50;background:#1E232B;border:1px solid #2E343D;border-radius:10px;padding:9px 11px;font-size:12.5px;line-height:1.45;max-width:260px;opacity:0;transform:translateY(4px) scale(.98);transition:opacity .14s ease-out,transform .14s var(--ease-out);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.tip{position:fixed;pointer-events:none;z-index:50;background:#16181C;color:#F7F4EE;border:1px solid #16181C;border-radius:10px;padding:9px 11px;font-size:12.5px;line-height:1.45;max-width:260px;opacity:0;transform:translateY(4px) scale(.98);transition:opacity .14s ease-out,transform .14s var(--ease-out);box-shadow:0 12px 32px rgba(0,0,0,.4)}
 .tip.on{opacity:1;transform:none}
 .tip b{font-weight:600}
-.tip .k{color:var(--muted)}
+.tip .k{color:#B9BDC3}
 /* pitch section */
 .pills{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;mask-image:linear-gradient(90deg,#000 92%,transparent)}
 .pill{flex-shrink:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;text-align:left;cursor:pointer;transition:border-color .2s ease,background-color .2s ease,transform .16s var(--ease-out)}
@@ -108,7 +115,7 @@ button{font:inherit;color:inherit}
 .callout b{color:var(--ink);font-weight:500}
 /* league */
 .range{width:100%;-webkit-appearance:none;appearance:none;height:4px;background:var(--line);border-radius:99px;outline:none;margin:14px 0 6px}
-.range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--line);cursor:grab;transition:transform .16s var(--ease-out)}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:grab;transition:transform .16s var(--ease-out)}
 .range::-webkit-slider-thumb:active{transform:scale(1.15);cursor:grabbing}
 .range::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:3px solid var(--bg);cursor:grab}
 .pending{border:1px dashed var(--line);border-radius:14px;padding:28px;color:var(--muted);text-align:center}
@@ -130,29 +137,51 @@ th{color:var(--muted);font-weight:500;font-size:12px;font-family:var(--mono);let
 td.n{font-variant-numeric:tabular-nums;text-align:right} th.n{text-align:right}
 tr.ours td{color:var(--ink)} tr.best td:first-child:after{content:"  best";color:var(--teal);font:500 11px var(--mono)}
 footer{padding:48px 0 80px;color:var(--faint);font-size:13px}
+/* try it */
+.drop{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;border:1.5px dashed #CFC8BB;border-radius:16px;padding:34px 20px;background:var(--surface);cursor:pointer;transition:border-color .2s ease,background-color .2s ease,transform .16s var(--ease-out)}
+.drop:hover,.drop.over{border-color:var(--red);background:#FFFDFA}
+.drop:active{transform:scale(.99)}
+.drop span{font-size:13px;color:var(--muted)}
+.or{font:500 11px var(--mono);letter-spacing:.08em;color:var(--faint);text-transform:uppercase;margin:18px 0 10px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:9px 14px;border-radius:10px;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow);transition:transform .16s var(--ease-out),border-color .2s ease}
+.btn:hover{border-color:#CFC8BB}.btn:active{transform:scale(.97)}
+.fine{font-size:12.5px;color:var(--muted);margin-top:18px}
+.empty{color:var(--faint);text-align:center;padding:80px 0}
+/* photos */
+.banner{margin:56px 0 0;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.banner img{display:block;width:100%;height:clamp(220px,34vw,420px);object-fit:cover;transform:scale(1.04);transition:transform 1.6s var(--ease-out)}
+.banner.in img{transform:none}
+.banner figcaption{position:absolute;inset:auto 0 0 0;padding:28px 24px 18px;background:linear-gradient(180deg,transparent,rgba(10,12,14,.72));color:#fff;display:flex;justify-content:space-between;gap:16px;align-items:flex-end;font:400 clamp(18px,2.2vw,26px)/1.2 var(--serif)}
+.banner small,.interlude small{font:400 10.5px var(--sans);opacity:.75;display:block;max-width:40ch;text-align:right}
+.interlude{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:72px 0 0}
+.interlude figure{margin:0;border-radius:16px;overflow:hidden;position:relative;box-shadow:var(--shadow)}
+.interlude img{display:block;width:100%;height:300px;object-fit:cover}
+.interlude figcaption{position:absolute;inset:auto 0 0 0;padding:40px 18px 14px;background:linear-gradient(180deg,transparent,rgba(10,12,14,.75));color:#fff;font-size:14.5px}
+.interlude small{text-align:left;margin-top:6px}
+@media (max-width:700px){.interlude{grid-template-columns:1fr}}
 /* reveal */
 .reveal{opacity:0;transform:translateY(10px);filter:blur(4px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out),filter .7s var(--ease-out)}
 .reveal.in{opacity:1;transform:none;filter:none}
 svg text{font-family:var(--sans)}
 @media (max-width:900px){.grid2,.hero-grid{grid-template-columns:1fr}.hero-art{max-width:420px}.stats{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.verdict{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr 1fr}}
-@media (max-width:560px){.wrap{padding:0 16px}.cards{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}nav .links{display:none}section{padding:80px 0}}
+@media (max-width:560px){.wrap{padding:0 16px}.cards{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}.brand{display:none}nav .links{margin-left:0}section{padding:80px 0}.stats{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none;filter:none}}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
   <div class="brand"><span class="brand-mark"></span>Pitch Integrity Monitor</div>
-  <div class="links">
-    <a href="#pitch">The pitch</a><a href="#single">One pitch</a><a href="#pattern">The pattern</a><a href="#league">All of MLB</a><a href="#stops">Limits</a><a href="#method">Method</a>
+  <div class="links"><i class="ind"></i>
+    <button data-go="pitch"><span>01</span>The pitch</button><button data-go="single"><span>02</span>One pitch</button><button data-go="pattern"><span>03</span>The pattern</button><button data-go="league"><span>04</span>All of MLB</button><button data-go="tryit"><span>05</span>Try it</button><button data-go="method"><span>06</span>Method</button>
   </div>
-</div></nav>
+</div><i class="progress" id="progress"></i></nav>
 
 <header class="hero"><div class="wrap">
   <div class="allege reveal"><i></i>Allegations, not findings. Both pitchers have pleaded not guilty; trial is set for November 2026.</div>
   <div class="hero-grid"><div>
   <h1 class="reveal">Can pitch data catch a <em>rigged pitch?</em></h1>
   <p class="lede reveal">In 2025 two Cleveland pitchers were charged with selling individual pitches to bettors. Every alarm so far came from the betting side. We asked whether the <b>pitch-tracking data itself</b> gives a fixer away, and how many innocent pitchers an alarm like that would also catch.</p>
-  </div><div class="hero-art reveal"><svg id="hero-svg" viewBox="0 0 400 440" width="100%" aria-label="Every Clase first pitch, named pitches highlighted"></svg><div class="cap">EVERY CLASE FIRST PITCH 2023–25 · <span style="color:var(--amber)">● NAMED IN COURT</span></div></div></div>
+  </div><div class="hero-art reveal"><svg id="hero-svg" viewBox="0 0 520 420" width="100%" aria-label="Animated pitch bouncing in the dirt with tracking data"></svg><div class="cap">OCT 5 2024 · FIRST PITCH TO VIERLING · REAL STATCAST VALUES</div></div></div>
   <div class="stats reveal">
     <div class="stat"><div class="v num" data-count="18">0</div><div class="l">Clase pitches named by prosecutors (Sept 18 2026 filing)</div></div>
     <div class="stat"><div class="v num" data-count="6">0</div><div class="l">of those 18 were not even balls, so location can't reveal them</div></div>
@@ -163,6 +192,7 @@ svg text{font-family:var(--sans)}
     <div class="vcard"><div class="vicon no">✕</div><div><h3>Single pitches: no</h3><p>A rigged ball in the dirt looks like an ordinary miss. A one-line rule beat our own model.</p></div></div>
     <div class="vcard"><div class="vicon yes">✓</div><div><h3>Monthly patterns: sometimes</h3><p id="verdict-yes">A pitcher's own first-pitch miss rate jumped when the scheme peaked. We show where that works and where it doesn't.</p></div></div>
   </div>
+  <!--IMG:hero--><figure class="banner reveal"><img src="__IMG_hero__" alt="A major-league ballpark"><figcaption><span>Every pitch in MLB is tracked by cameras to within an inch. That record is public.</span><small>__CREDIT_hero__</small></figcaption></figure><!--/IMG:hero-->
 </div></header>
 
 <section id="pitch"><div class="wrap">
@@ -196,7 +226,7 @@ svg text{font-family:var(--sans)}
     <span class="chip" id="method-note">pre-registered at commit 5fa3b3e</span>
   </div>
   <div class="panel reveal"><svg id="waffle" width="100%" role="img" aria-label="Waffle chart of ranked pitches"></svg>
-    <div class="legend"><span><i class="sw" style="outline:1.5px solid var(--ink);outline-offset:-1px"></i>top 18 (where a perfect detector puts them)</span><span><i class="sw" style="background:var(--amber)"></i>court-named</span><span><i class="sw" style="background:#2A3038"></i>every other pitch</span></div>
+    <div class="legend"><span><i class="sw" style="outline:1.5px solid var(--ink);outline-offset:-1px"></i>top 18 (where a perfect detector puts them)</span><span><i class="sw" style="background:var(--amber)"></i>court-named</span><span><i class="sw" style="background:#E8E2D7"></i>every other pitch</span></div>
   </div>
   <div class="kpis reveal">
     <div class="kpi"><div class="v num" id="k-top18">–</div><div class="l">named pitches in the top 18</div></div>
@@ -207,6 +237,10 @@ svg text{font-family:var(--sans)}
   <div class="callout reveal"><b>Why our model lost:</b> it looks for pitches that are strange for him, but a rigged ball in the dirt is a normal-looking miss, and <b>6 of the 18</b> were called strikes, fouls or swinging strikes, bets on speed or pitch type that leave no trace in location. Asking "is this one pitch suspicious?" is the wrong question.</div>
 </div></section>
 
+<!--IMG:pitcher--><div class="wrap"><div class="interlude reveal">
+  <figure><img src="__IMG_pitcher__" alt="A pitcher mid-delivery"><figcaption><b>The first pitch.</b> 17 of the 18 named pitches opened an at-bat.<small>__CREDIT_pitcher__</small></figcaption></figure>
+  <!--IMG:plate--><figure><img src="__IMG_plate__" alt="Home plate and the dirt around it"><figcaption><b>In the dirt.</b> "Clase threw many of them in the dirt, well outside the strike zone." (DOJ)<small>__CREDIT_plate__</small></figcaption></figure><!--/IMG:plate-->
+</div></div><!--/IMG:pitcher-->
 <section id="pattern"><div class="wrap">
   <div class="eyebrow reveal">03 · Result two</div>
   <h2 class="reveal">The pattern shows up in the rate.</h2>
@@ -216,7 +250,7 @@ svg text{font-family:var(--sans)}
     <span class="chip" id="month-note"></span>
   </div>
   <div class="panel reveal"><svg id="months" width="100%" role="img" aria-label="Monthly first-pitch dirt rate"></svg>
-    <div class="legend"><span><i class="sw" style="background:var(--amber)"></i>month containing a court-named pitch</span><span><i class="sw" style="background:#3A414B"></i>other months</span><span><i class="sw" style="background:var(--teal);height:2px;width:14px"></i>his own baseline</span><span><i class="sw" style="background:var(--red);border-radius:50%"></i>alert (p ≤ 0.001)</span></div>
+    <div class="legend"><span><i class="sw" style="background:var(--amber)"></i>month containing a court-named pitch</span><span><i class="sw" style="background:#CFC8BB"></i>other months</span><span><i class="sw" style="background:var(--teal);height:2px;width:14px"></i>his own baseline</span><span><i class="sw" style="background:var(--red);border-radius:50%"></i>alert (p ≤ 0.001)</span></div>
   </div>
   <div class="callout reveal" id="pattern-callout"></div>
 </div></section>
@@ -226,6 +260,23 @@ svg text{font-family:var(--sans)}
   <h2 class="reveal">How many innocent pitchers does it flag?</h2>
   <p class="lede reveal">An alarm is only useful if an integrity desk can afford to check it. Each dot is one pitcher-month in MLB from 2023 to 2025. Further right means a bigger jump above that pitcher's own baseline. <b>Drag the threshold</b> to see the trade-off. Other pitchers are never named.</p>
   <div id="league-body" class="reveal"></div>
+</div></section>
+
+<section id="tryit"><div class="wrap">
+  <div class="eyebrow reveal">05 · Try it</div>
+  <h2 class="reveal">Run the monitor on any pitcher.</h2>
+  <p class="lede reveal">Download one pitcher's pitches from <a href="https://baseballsavant.mlb.com/statcast_search" target="_blank" rel="noopener">Baseball Savant</a> (Statcast Search → pick a pitcher → Download CSV) and drop the file here. Everything runs in your browser, and nothing is uploaded anywhere.</p>
+  <div class="grid2" style="grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)">
+    <div class="reveal">
+      <label class="drop" id="drop"><input type="file" id="file" accept=".csv" hidden>
+        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="#fff" stroke="#D5CFC4"/><path d="M12,6 Q19,20 12,34 M28,6 Q21,20 28,34" fill="none" stroke="#C8322B" stroke-width="1.8" stroke-dasharray="2 2"/></svg>
+        <b>Drop a Savant CSV</b><span>or click to choose a file</span></label>
+      <div class="or">or try a sample</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-sample="Emmanuel Clase">Emmanuel Clase</button><button class="btn" data-sample="Luis L. Ortiz">Luis L. Ortiz</button></div>
+      <p class="fine">Same rule as the study: first pitch of an at-bat, taken for a ball, more than 30% of the zone height below the bottom. Each month with 20+ first pitches is tested against the pitcher's own other months (binomial tail, shrunk toward the league rate).</p>
+    </div>
+    <div class="panel reveal" id="try-out"><div class="empty">Results appear here.</div></div>
+  </div>
 </div></section>
 
 <section id="stops"><div class="wrap">
@@ -263,14 +314,22 @@ svg text{font-family:var(--sans)}
 const DATA = /*__DATA__*/null;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fmt = d3.format(',');
-const C = {amber:'#F5B841', teal:'#5CC8B8', red:'#FF6B5A', ink:'#ECE8DF', muted:'#8A909A', faint:'#5A606A', line:'#232830', cell:'#2A3038', bg:'#0B0D10'};
+const C = {amber:'#D9860B', teal:'#2E7D5B', red:'#C8322B', ink:'#16181C', muted:'#5E636B', faint:'#9A9EA5', line:'#E3DDD1', cell:'#E8E2D7', bar:'#CFC8BB', bg:'#FFFFFF', dirt:'#C9A27A'};
 const EASE = d3.easeCubicOut, EASE_IO = d3.easeCubicInOut;
 
 /* ---------- reveal + nav highlight ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.reveal').forEach((el,i) => { el.style.transitionDelay = (el.closest('.cards,.stats,.verdict') ? (i%4)*60 : 0)+'ms'; io.observe(el); });
-const navObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.querySelectorAll('nav .links a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#'+e.target.id)); }), {rootMargin:'-45% 0px -50% 0px'});
+const navBtns = [...document.querySelectorAll('nav .links button')], ind = document.querySelector('nav .links .ind');
+function markNav(id){ navBtns.forEach(b => b.classList.toggle('on', b.dataset.go === id)); const b = navBtns.find(b => b.dataset.go === id);
+  if (b){ ind.style.left = b.offsetLeft+'px'; ind.style.width = b.offsetWidth+'px'; ind.style.opacity = 1; b.scrollIntoView({block:'nearest', inline:'nearest'}); } else ind.style.opacity = 0; }
+navBtns.forEach(b => b.addEventListener('click', () => { const t = document.getElementById(b.dataset.go); if (!t) return;
+  window.scrollTo({top: t.getBoundingClientRect().top + window.scrollY - 64, behavior: reduce ? 'auto' : 'smooth'}); }));
+const navObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) markNav(e.target.id); }), {rootMargin:'-40% 0px -55% 0px'});
 document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+new IntersectionObserver(es => { if (es[0].isIntersecting) markNav(null); }, {rootMargin:'-40% 0px -55% 0px'}).observe(document.querySelector('.hero'));
+const prog = document.getElementById('progress');
+addEventListener('scroll', () => { const h = document.documentElement; prog.style.transform = `scaleX(${h.scrollTop/(h.scrollHeight-h.clientHeight)})`; }, {passive:true});
 function onFirstView(el, fn){ const o = new IntersectionObserver(es => { if (es[0].isIntersecting){ o.disconnect(); fn(); } }, {threshold:.25}); o.observe(el); }
 
 /* ---------- tooltip ---------- */
@@ -299,22 +358,72 @@ onFirstView(document.querySelector('.stats'), () => {
 });
 
 
-/* ---------- hero art: real Clase first pitches ---------- */
-(function heroArt(){
-  const svg = d3.select('#hero-svg'), W = 400, H = 440;
-  const x = d3.scaleLinear([-2.6,2.6],[0,W]), y = d3.scaleLinear([-1.8,5],[H,0]);
-  svg.append('rect').attr('x',0).attr('y',y(0)).attr('width',W).attr('height',H-y(0)).attr('fill','#1A140E').attr('opacity',.5);
-  svg.append('line').attr('x1',0).attr('x2',W).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#5B4630').attr('stroke-dasharray','2 4');
-  svg.append('rect').attr('x',x(-.708)).attr('width',x(.708)-x(-.708)).attr('y',y(3.4)).attr('height',y(1.6)-y(3.4)).attr('fill','none').attr('stroke',C.ink).attr('stroke-opacity',.7).attr('rx',2);
-  const fp = DATA.pitches.filter(p => p.fp && p.x != null).sort((a,b) => (a.id?1:0)-(b.id?1:0));
-  const dots = svg.append('g').selectAll('circle').data(fp).join('circle')
-    .attr('cx', p => x(p.x)).attr('cy', p => y(p.z)).attr('r', p => p.id ? 5.5 : 2.2)
-    .attr('fill', p => p.id ? C.amber : C.teal).attr('opacity', 0).attr('stroke', p => p.id ? C.bg : 'none').attr('stroke-width',1.5);
-  if (reduce){ dots.attr('opacity', p => p.id ? 1 : .35); return; }
-  dots.attr('cy', p => y(p.z) - 30).transition().delay((p,i) => p.id ? 1400 + i%18*40 : i*1.2).duration(p => p.id ? 500 : 700).ease(EASE)
-    .attr('cy', p => y(p.z)).attr('opacity', p => p.id ? 1 : .35);
-  svg.append('g').selectAll('circle').data(fp.filter(p => p.id)).join('circle').attr('cx', p => x(p.x)).attr('cy', p => y(p.z)).attr('r',5).attr('fill','none').attr('stroke',C.amber)
-    .attr('opacity',0).call(sel => (function pulse(){ sel.attr('r',5).attr('opacity',.6).transition().delay((p,i) => 2200 + i*120).duration(1400).ease(EASE).attr('r',16).attr('opacity',0); })());
+/* ---------- hero: the pitch, animated with its real Statcast values ---------- */
+(function heroFlight(){
+  const svg = d3.select('#hero-svg'), W = 520, H = 420, G = 318;
+  const defs = svg.append('defs');
+  const sky = defs.append('linearGradient').attr('id','sky').attr('x1',0).attr('x2',0).attr('y1',0).attr('y2',1);
+  sky.append('stop').attr('offset',0).attr('stop-color','#FFFFFF'); sky.append('stop').attr('offset',1).attr('stop-color','#F1EDE5');
+  svg.append('rect').attr('width',W).attr('height',H).attr('rx',18).attr('fill','url(#sky)').attr('stroke',C.line);
+  // field: grass, dirt cutouts, mound, plate
+  svg.append('path').attr('d',`M0,${G} H${W} V${H-18} Q${W},${H} ${W-18},${H} H18 Q0,${H} 0,${H-18} Z`).attr('fill','#E4ECDD');
+  svg.append('path').attr('d',`M0,${G} H150 Q120,${G+40} 0,${G+46} Z`).attr('fill','#E7D3B8');
+  svg.append('path').attr('d',`M${W},${G} H360 Q390,${G+44} ${W},${G+52} Z`).attr('fill','#E7D3B8');
+  svg.append('path').attr('d',`M10,${G} Q70,${G-26} 140,${G}`).attr('fill','#DDBF98');
+  svg.append('rect').attr('x',62).attr('y',G-15).attr('width',22).attr('height',3).attr('rx',1).attr('fill','#fff');
+  svg.append('path').attr('d',`M436,${G} l14,-4 l14,4 z`).attr('fill','#fff').attr('stroke','#BDB5A6');
+  svg.append('line').attr('x1',0).attr('x2',W).attr('y1',G).attr('y2',G).attr('stroke','#CDBFA9');
+  const pit = svg.append('g').attr('transform',`translate(70,${G-16})`).attr('fill','#2A2D33');
+  pit.append('circle').attr('cx',4).attr('cy',-112).attr('r',9);
+  pit.append('path').attr('d','M-6,-100 Q4,-104 14,-98 L18,-60 Q6,-54 -6,-58 Z');
+  pit.append('path').attr('d','M-4,-60 L-22,-20 L-30,0 L-22,2 L-12,-18 L2,-46 Z');
+  pit.append('path').attr('d','M10,-60 L22,-30 L30,-2 L38,-2 L32,-34 L18,-62 Z');
+  pit.append('path').attr('d','M12,-96 Q30,-104 36,-118 L41,-114 Q36,-96 16,-88 Z');
+  pit.append('path').attr('d','M-4,-94 Q-18,-86 -22,-74 L-16,-72 Q-12,-82 0,-88 Z');
+  // strike zone (side view) at the plate: 1.66 ft to 3.36 ft
+  const ft = 36, zx = 450; // pixels per foot
+  const zt = G-3.36*ft, zb = G-1.66*ft;
+  svg.append('rect').attr('x',zx-5).attr('y',zt).attr('width',10).attr('height',zb-zt).attr('fill','rgba(46,125,91,.08)').attr('stroke',C.teal).attr('stroke-dasharray','3 3');
+  svg.append('text').attr('x',zx-12).attr('y',zt-8).attr('text-anchor','end').attr('font-size',10.5).attr('fill',C.teal).attr('font-family','JetBrains Mono').text('STRIKE ZONE');
+  svg.append('text').attr('x',76).attr('y',G+30).attr('text-anchor','middle').attr('font-size',10.5).attr('fill','#8C6440').attr('font-family','JetBrains Mono').text("60' 6\"");
+  // flight path: release ~6 ft high, bounce just short of the plate, small hop
+  const rel = [110, G-136], bounce = [410, G], end = [500, G-6];
+  const path = d3.path(); path.moveTo(...rel); path.quadraticCurveTo(270, G-170, ...bounce); path.quadraticCurveTo(455, G-34, ...end);
+  const track = svg.append('path').attr('d', path.toString()).attr('fill','none').attr('stroke',C.red).attr('stroke-width',1.5).attr('stroke-dasharray','4 5').attr('opacity',.0);
+  const ghosts = svg.append('g'), dust = svg.append('g');
+  // vector baseball
+  const ball = svg.append('g');
+  ball.append('circle').attr('r',11).attr('fill','#fff').attr('stroke','#D5CFC4');
+  const seam = ball.append('g');
+  [[-1],[1]].forEach(([k]) => seam.append('path').attr('d',`M${k*4},-10 Q${k*10},0 ${k*4},10`).attr('fill','none').attr('stroke',C.red).attr('stroke-width',1.6).attr('stroke-dasharray','1.6 1.6'));
+  const hud = svg.append('g').attr('font-family','JetBrains Mono').attr('font-size',11);
+  const labels = [
+    {x:rel[0]+14, y:rel[1]-12, t:'RELEASE · SLIDER · 93.1 MPH'},
+    {x:404, y:G+30, t:'PLATE HEIGHT −0.68 FT', anchor:'end'},
+    {x:404, y:G+46, t:'BALL · FIRST PITCH OF THE AT-BAT', anchor:'end', red:true}];
+  const lab = hud.selectAll('text').data(labels).join('text').attr('x',d => d.x).attr('y',d => d.y).attr('text-anchor',d => d.anchor||'start').attr('fill',d => d.red ? C.red : C.muted).attr('opacity',0).text(d => d.t);
+  const node = track.node(), Ltot = node.getTotalLength(), Lb = (() => { let lo=0, hi=Ltot; for (let i=0;i<30;i++){ const m=(lo+hi)/2; node.getPointAtLength(m).x < bounce[0] ? lo=m : hi=m; } return lo; })();
+  function frame(len, rot){ const p = node.getPointAtLength(len); ball.attr('transform',`translate(${p.x},${p.y})`); seam.attr('transform',`rotate(${rot})`); }
+  function finalFrame(){ frame(Ltot, 0); track.attr('opacity',.9); lab.attr('opacity',1); }
+  if (reduce){ finalFrame(); return; }
+  let running = false;
+  function play(){
+    running = true; ghosts.selectAll('*').remove(); dust.selectAll('*').remove(); lab.attr('opacity',0); track.attr('opacity',0);
+    lab.filter((d,i) => i===0).transition().delay(150).duration(300).attr('opacity',1);
+    const t0 = performance.now(), T1 = 1150, T2 = 420; let lastGhost = 0;
+    const timer = d3.timer(() => {
+      const t = performance.now() - t0;
+      if (t < T1){ const k = d3.easeQuadIn(t/T1)*.55 + (t/T1)*.45, len = k*Lb; frame(len, t*1.6);
+        if (t - lastGhost > 70){ lastGhost = t; const p = node.getPointAtLength(len); ghosts.append('circle').attr('cx',p.x).attr('cy',p.y).attr('r',4).attr('fill',C.red).attr('opacity',.35).transition().duration(900).attr('opacity',.12); } }
+      else if (t < T1+T2){ const k = d3.easeQuadOut((t-T1)/T2); frame(Lb + k*(Ltot-Lb), t*1.6);
+        if (!dust.node().childNodes.length){ d3.range(14).forEach(i => { const a = Math.PI*(1 + i/13), r = 10 + Math.random()*26; dust.append('circle').attr('cx',bounce[0]).attr('cy',G-2).attr('r',2+Math.random()*3).attr('fill',C.dirt).attr('opacity',.9)
+          .transition().duration(700).ease(EASE).attr('cx',bounce[0]+Math.cos(a)*r).attr('cy',G-2+Math.sin(a)*r*.5).attr('opacity',0); }); } }
+      else { timer.stop(); track.transition().duration(500).attr('opacity',.9); lab.filter((d,i) => i>0).transition().delay((d,i) => 150+i*160).duration(320).attr('opacity',1);
+        setTimeout(() => { running = false; if (visible) play(); }, 4200); }
+    });
+  }
+  let visible = false;
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && !running) play(); }).observe(document.getElementById('hero-svg'));
 })();
 
 /* ================= 01 THE PITCH ================= */
@@ -330,11 +439,11 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   ground.append('rect').attr('x',m.l).attr('width',W-m.l-m.r).attr('y',y(0)).attr('height',y(-1.6)-y(0)).attr('fill','url(#dirt)');
   const defs = svg.append('defs');
   const lg = defs.append('linearGradient').attr('id','dirt').attr('x1',0).attr('x2',0).attr('y1',0).attr('y2',1);
-  lg.append('stop').attr('offset',0).attr('stop-color','#3A2A1A').attr('stop-opacity',.55); lg.append('stop').attr('offset',1).attr('stop-color','#3A2A1A').attr('stop-opacity',0);
-  ground.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#5B4630').attr('stroke-dasharray','2 4');
-  ground.append('text').attr('x',W-m.r-6).attr('y',y(0)+16).attr('text-anchor','end').attr('fill','#8C6D4A').attr('font-size',11).text('the dirt');
+  lg.append('stop').attr('offset',0).attr('stop-color','#C9A27A').attr('stop-opacity',.55); lg.append('stop').attr('offset',1).attr('stop-color','#C9A27A').attr('stop-opacity',0);
+  ground.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#A9825A').attr('stroke-dasharray','2 4');
+  ground.append('text').attr('x',W-m.r-6).attr('y',y(0)+16).attr('text-anchor','end').attr('fill','#8C6440').attr('font-size',11).text('the dirt');
   const cloudG = svg.append('g'), zoneR = svg.append('rect').attr('fill','none').attr('stroke',C.ink).attr('stroke-width',1.5).attr('rx',2);
-  const plate = svg.append('path').attr('fill','#1B1F25').attr('stroke','#3A414B');
+  const plate = svg.append('path').attr('fill','#1B1F25').attr('stroke',C.bar);
   const ring = svg.append('circle').attr('r',22).attr('fill','none').attr('stroke',C.amber).attr('stroke-opacity',.35);
   const dot = svg.append('circle').attr('r',8).attr('fill',C.amber).attr('stroke',C.bg).attr('stroke-width',2.5);
   let first = true;
@@ -438,7 +547,7 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
     gy.transition().duration(300).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.0%')).tickSize(-(W-m.l-m.r)).tickPadding(8))
       .on('end', () => gy.selectAll('line').attr('stroke',C.line)).selection().call(g => g.select('.domain').remove()).selectAll('text').attr('fill',C.faint).attr('font-size',11);
     gy.selectAll('line').attr('stroke',C.line);
-    const color = r => r.named ? C.amber : '#3A414B';
+    const color = r => r.named ? C.amber : C.bar;
     bars.selectAll('rect').data(rows, r => r.m).join(
       en => en.append('rect').attr('x', r => x(r.m)).attr('width', x.bandwidth()).attr('y', y(0)).attr('height',0).attr('rx',3),
       up => up, ex => ex.transition().duration(200).attr('opacity',0).remove())
@@ -473,13 +582,72 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   initSeg('seg-pitcher', k => { curName = k; draw(k, true); });
 })();
 
+
+/* ================= 05 TRY IT (client-side monitor, mirrors pim/monitor.py) ================= */
+(function tryIt(){
+  const out = document.getElementById('try-out'), LEAGUE = L ? L.league_first_pitch_spike_rate : 0.064, SHRINK = 150, GT = new Set(['R','F','D','L','W']);
+  function parseCSV(text){
+    const rows = []; let row = [], f = '', q = false;
+    for (let i = 0; i < text.length; i++){ const c = text[i];
+      if (q){ if (c === '"'){ if (text[i+1] === '"'){ f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"') q = true; else if (c === ','){ row.push(f); f = ''; } else if (c === '\n'){ row.push(f); rows.push(row); row = []; f = ''; } else if (c !== '\r') f += c; }
+    if (f || row.length){ row.push(f); rows.push(row); }
+    const h = rows.shift().map(x => x.replace(/^\uFEFF/,'').trim()); return rows.filter(r => r.length === h.length).map(r => Object.fromEntries(h.map((k,i) => [k, r[i]])));
+  }
+  const lgam = x => { const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,.1208650973866179e-2,-.5395239384953e-5]; let y=x, t=x+5.5; t-=(x+.5)*Math.log(t); let s=1.000000000190015; for (const v of c) s+=v/++y; return -t+Math.log(2.5066282746310005*s/x); };
+  const lchoose = (n,k) => lgam(n+1) - lgam(k+1) - lgam(n-k+1);
+  function sf(k, n, p){ let tot = 0; for (let j = k; j <= n; j++) tot += Math.exp(lchoose(n,j) + j*Math.log(p) + (n-j)*Math.log(1-p)); return Math.min(1, tot); }
+  function monthsFrom(rows){
+    const pid = d3.rollups(rows, v => v.length, r => r.pitcher).sort((a,b) => b[1]-a[1])[0][0];
+    const name = (rows.find(r => r.pitcher === pid && r.player_name) || {}).player_name || `Pitcher ${pid}`;
+    const fp = rows.filter(r => r.pitcher === pid && (!r.game_type || GT.has(r.game_type)) && +r.pitch_number === 1 && r.pitch_type && r.pitch_type !== 'PO' && r.plate_x !== '' && r.plate_z !== '' && r.sz_top !== '' && r.sz_bot !== '');
+    const cells = d3.rollups(fp, v => ({n: v.length, k: v.filter(r => (r.description === 'ball' || r.description === 'blocked_ball') && ((+r.plate_z - +r.sz_bot)/(+r.sz_top - +r.sz_bot)) < -0.3).length}), r => r.game_date.slice(0,7))
+      .map(([m, o]) => ({m, ...o})).sort((a,b) => a.m.localeCompare(b.m));
+    const N = d3.sum(cells, c => c.n), K = d3.sum(cells, c => c.k);
+    return {name: name.includes(',') ? name.split(',').reverse().join(' ').trim() : name, rows: cells.filter(c => c.n >= 20).map(c => { const base = (K - c.k + SHRINK*LEAGUE)/(N - c.n + SHRINK); return {...c, rate: c.k/c.n, base, s: -Math.log10(Math.max(1e-300, sf(c.k, c.n, base)))}; })};
+  }
+  function render(name, rows, note){
+    if (!rows.length){ out.innerHTML = '<div class="empty">Not enough first pitches (needs 20+ in a month).</div>'; return; }
+    const W = 640, H = 260, m = {l:40,r:10,t:16,b:30};
+    const x = d3.scaleBand(rows.map(r => r.m),[m.l,W-m.r]).padding(.25), y = d3.scaleLinear([0, Math.max(.2, d3.max(rows, r => r.rate)*1.15)],[H-m.b,m.t]);
+    const worst = rows.reduce((a,b) => b.s > a.s ? b : a), alerts = rows.filter(r => r.s >= 3).length;
+    out.innerHTML = `<div class="panel-h"><span>${name.toUpperCase()} · ${rows.length} MONTHS</span><span>${note||''}</span></div><svg viewBox="0 0 ${W} ${H}" width="100%" id="try-svg"></svg>
+      <div class="kpis" style="margin-top:8px"><div class="kpi"><div class="v num">${alerts}</div><div class="l">alert months (p ≤ 0.001)</div></div><div class="kpi"><div class="v num">${(worst.rate*100).toFixed(0)}%</div><div class="l">highest month (${worst.m}), ${worst.k} of ${worst.n}</div></div><div class="kpi"><div class="v num">${(worst.base*100).toFixed(1)}%</div><div class="l">his own baseline</div></div></div>
+      <p class="fine">${alerts ? 'An alert means "look at the video". It is not evidence of anything.' : 'No month stands out against his own baseline.'}</p>`;
+    const svg = d3.select('#try-svg');
+    svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('.0%')).tickSize(-(W-m.l-m.r))).call(g => g.select('.domain').remove()).call(g => g.selectAll('line').attr('stroke',C.line)).selectAll('text').attr('fill',C.faint).attr('font-size',10);
+    svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).tickSize(0).tickPadding(8).tickValues(x.domain().filter((d,i,a) => a.length < 14 || i%2===0))).call(g => g.select('.domain').attr('stroke',C.line)).selectAll('text').attr('fill',C.faint).attr('font-size',10);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x',r => x(r.m)).attr('width',x.bandwidth()).attr('rx',2).attr('y',y(0)).attr('height',0).attr('fill',r => r.s >= 3 ? C.red : C.bar)
+      .on('mousemove',(ev,r) => showTip(`<b>${r.m}</b><br>${r.k} of ${r.n} first pitches in the dirt<br><span class="k">baseline ${(r.base*100).toFixed(1)}% · score ${r.s.toFixed(2)}</span>`, ev)).on('mouseleave', hideTip)
+      .transition().duration(reduce?0:550).delay((r,i) => reduce?0:i*25).ease(EASE).attr('y',r => y(r.rate)).attr('height',r => y(0)-y(r.rate));
+    svg.append('path').attr('d', d3.line().x(r => x(r.m)+x.bandwidth()/2).y(r => y(r.base)).curve(d3.curveMonotoneX)(rows)).attr('fill','none').attr('stroke',C.teal).attr('stroke-width',2).attr('stroke-dasharray','5 4');
+  }
+  function handle(file){
+    out.innerHTML = '<div class="empty">Reading…</div>';
+    file.text().then(t => { try { const rows = parseCSV(t);
+      const need = ['pitcher','game_date','pitch_number','plate_z','sz_top','sz_bot','description'];
+      const miss = need.filter(k => !(k in (rows[0]||{})));
+      if (miss.length){ out.innerHTML = `<div class="empty">This file is missing columns: ${miss.join(', ')}.<br>Use a Statcast Search CSV.</div>`; return; }
+      const r = monthsFrom(rows); render(r.name, r.rows, 'YOUR FILE · COMPUTED IN BROWSER'); } catch(e){ out.innerHTML = `<div class="empty">Could not read this file (${e.message}).</div>`; } });
+  }
+  const drop = document.getElementById('drop'), file = document.getElementById('file');
+  file.addEventListener('change', () => file.files[0] && handle(file.files[0]));
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => e.dataTransfer.files[0] && handle(e.dataTransfer.files[0]));
+  document.querySelectorAll('[data-sample]').forEach(b => b.addEventListener('click', () => {
+    const rows = DATA.months.filter(r => r.p === b.dataset.sample).map(r => ({m:r.m, n:r.n, k:r.k, rate:r.rate, base:r.base, s:r.s}));
+    render(b.dataset.sample, rows, 'SAMPLE · STUDY DATA');
+  }));
+})();
+
 /* ================= 04 LEAGUE ================= */
 (function league(){
   const box = document.getElementById('league-body');
   if (!DATA.cells || !L){ box.innerHTML = '<div class="pending">The league-wide test is still running on the full 2023–25 pull. It appears here automatically when finished.</div>'; return; }
   box.innerHTML = `<div class="panel"><div class="panel-h"><span>${fmt(L.n_pitcher_months)} PITCHER-MONTHS · ${fmt(L.n_pitchers)} PITCHERS</span><span>threshold p ≤ <b class="num" id="thr-p" style="color:var(--ink)"></b></span></div>
     <svg id="swarm" width="100%"></svg><input class="range" id="thr" type="range" min="1" max="5" step="0.05" value="3" aria-label="Alert threshold">
-    <div class="legend"><span><i class="sw" style="background:#3A414B;border-radius:50%"></i>other pitcher-month (anonymous)</span><span><i class="sw" style="background:var(--amber);border-radius:50%"></i>month with a court-named pitch</span><span><i class="sw" style="background:var(--muted);border-radius:50%;opacity:.6"></i>Clase/Ortiz, other months</span></div></div>
+    <div class="legend"><span><i class="sw" style="background:#CFC8BB;border-radius:50%"></i>other pitcher-month (anonymous)</span><span><i class="sw" style="background:var(--amber);border-radius:50%"></i>month with a court-named pitch</span><span><i class="sw" style="background:var(--muted);border-radius:50%;opacity:.6"></i>Clase/Ortiz, other months</span></div></div>
     <div class="kpis"><div class="kpi"><div class="v num" id="lk-a">–</div><div class="l">alerts across MLB, 2023–25</div></div><div class="kpi"><div class="v num" id="lk-m">–</div><div class="l">alerts per month for an integrity desk to review</div></div><div class="kpi"><div class="v num" id="lk-n">–</div><div class="l">named months caught</div></div></div>
     <div id="league-table"></div><div class="callout" id="league-callout"></div>`;
   const S = DATA.cells.s, NM = DATA.cells.named, LB = DATA.cells.label, nMonths = DATA.cells.n_months;
@@ -489,10 +657,10 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   const rng = d3.randomNormal.source(d3.randomLcg(3))(0,1);
   const idx = d3.range(S.length).sort((a,b) => (NM[a]-NM[b]) || (LB[a]-LB[b]));
   const pts = idx.map(i => ({i, s:S[i], nm:NM[i], lb:LB[i], jy:(H-m.b-m.t)/2 + m.t + Math.max(-1,Math.min(1,rng()/2.3))*(H-m.b-m.t)/2*.92}));
-  const shade = svg.append('rect').attr('y',m.t).attr('height',H-m.b-m.t).attr('fill','rgba(255,107,90,.07)');
+  const shade = svg.append('rect').attr('y',m.t).attr('height',H-m.b-m.t).attr('fill','rgba(200,50,43,.06)');
   const g = svg.append('g');
   const dots = g.selectAll('circle').data(pts).join('circle').attr('cx',d => x(d.s)).attr('cy',d => d.jy).attr('r',d => d.lb ? 6 : d.nm ? 4 : 2.4)
-    .attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : '#3A414B').attr('opacity',d => d.lb ? 1 : d.nm ? .6 : .55).attr('stroke',d => d.lb ? C.bg : 'none').attr('stroke-width',1.5);
+    .attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : C.bar).attr('opacity',d => d.lb ? 1 : d.nm ? .6 : .55).attr('stroke',d => d.lb ? C.bg : 'none').attr('stroke-width',1.5);
   dots.filter(d => d.lb || d.nm).on('mousemove',(ev,d) => showTip(`${d.lb?'<b>Month with a court-named pitch</b>':'Clase/Ortiz, month not named'}<br><span class="k">alert score ${d.s.toFixed(2)} · p ≈ ${Math.pow(10,-d.s).toPrecision(1)}</span>`, ev)).on('mouseleave', hideTip);
   if (!reduce){ dots.attr('cx', x(0)).transition().duration(900).delay(d => d.lb ? 500 : Math.random()*300).ease(EASE).attr('cx', d => x(d.s)); }
   const line = svg.append('line').attr('y1',m.t-4).attr('y2',H-m.b).attr('stroke',C.red).attr('stroke-width',1.5);
@@ -504,7 +672,7 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
     document.getElementById('thr-p').textContent = Math.pow(10,-t).toPrecision(1);
     const a = flag.filter(Boolean).length, n = flag.filter((f,i) => f && LB[i]).length, nTot = LB.filter(Boolean).length;
     document.getElementById('lk-a').textContent = fmt(a); document.getElementById('lk-m').textContent = (a/nMonths).toFixed(1); document.getElementById('lk-n').textContent = `${n} / ${nTot}`;
-    dots.attr('opacity',d => d.lb ? 1 : d.nm ? .6 : (d.s >= t ? .95 : .4)).attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : (d.s >= t ? '#8A5A54' : '#3A414B'));
+    dots.attr('opacity',d => d.lb ? 1 : d.nm ? .6 : (d.s >= t ? .95 : .4)).attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : (d.s >= t ? '#E39A93' : C.bar));
   }
   thr.addEventListener('input', update); update();
   const M = L.methods, lab = {score_audit:'Ours: jump above his own baseline', score_live:'Ours, live (earlier months only)', baseline_rate:'Simple: raw monthly rate', baseline_count:'Simple: raw monthly count'};

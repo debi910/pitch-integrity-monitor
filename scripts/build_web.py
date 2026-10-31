@@ -23,6 +23,29 @@ def r(x, n=3):
     return None if x is None or (isinstance(x, float) and not np.isfinite(x)) else round(float(x), n)
 
 
+def embed_images(html: str) -> str:
+    """Inline web/img/<name>.jpg as data URIs; drop the <!--IMG:name--> block when the photo is absent."""
+    import base64
+    import re
+    credits = {}
+    cpath = ROOT / "web/img/CREDITS.md"
+    if cpath.exists():  # lines like: - hero.jpg: "Title" by Author, CC BY-SA 4.0, https://commons...
+        for line in cpath.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"\s*[-*]\s*`?(\w+)\.jpg`?\s*[:|]\s*(.+)", line)
+            if m:
+                credits[m.group(1)] = re.sub(r"https?://\S+", "", m.group(2)).strip(" ,|")
+    for name in ["hero", "pitcher", "plate", "ball"]:
+        img = ROOT / f"web/img/{name}.jpg"
+        block = re.compile(rf"<!--IMG:{name}-->(.*?)<!--/IMG:{name}-->", re.S)
+        if img.exists():
+            uri = "data:image/jpeg;base64," + base64.b64encode(img.read_bytes()).decode()
+            html = block.sub(lambda m: m.group(1), html)
+            html = html.replace(f"__IMG_{name}__", uri).replace(f"__CREDIT_{name}__", "Photo: " + credits.get(name, "Wikimedia Commons"))
+        else:
+            html = block.sub("", html)
+    return html
+
+
 def main():
     d = score(pd.read_parquet(ROOT / "data/slim/pitchers_clase_ortiz.parquet"))
     lab = pd.read_csv(ROOT / "data/labels/matched.csv")
@@ -71,6 +94,7 @@ def main():
     html = (ROOT / "web/template.html").read_text(encoding="utf-8")
     html = html.replace("/*__DATA__*/null", json.dumps(out, separators=(",", ":")))
     html = html.replace("/*__D3__*/", (ROOT / "web/vendor/d3.min.js").read_text(encoding="utf-8"))  # d3 v7.9.0, ISC
+    html = embed_images(html)
     (ROOT / "docs").mkdir(exist_ok=True)
     (ROOT / "docs/index.html").write_text(html, encoding="utf-8")
     print(f"docs/index.html: {len(html)/1e3:.0f} kB, league={'yes' if out['league'] else 'pending'}")
