@@ -68,6 +68,12 @@ pitches each, which is why the monitor caught only one. Past about six a month t
 stricter beta-binomial alarm a reliever needs 7 (50%) to 10 (90%). Performance data alone cannot stop small fixes, but it
 caps how greedy a fixer can be and tells an integrity desk when to pull betting records.
 
+**No hand-picked cut-off** (post-hoc; `eval/threshold_free.py` → `results/threshold_free.json`). We scored every
+pitcher-month at 11 dirt cut-offs (10% to 60% of a zone height below the zone) and averaged the scores. Clase May 2025 ranks
+**#38 of 8,339 (top 0.5%)**, and at every single cut-off it stays inside the top 2.3% (best #22 at 30%, worst #189 at 10%).
+At the frozen alert volume (27 alerts) the averaged score no longer flags it, so the honest claim is "consistently near the
+top of the review list", not "always alerts".
+
 **Coach mode, tested and not shipped** (pre-registered at `4eb6f84` before any injured-list data was joined;
 `pim/drift.py`, `eval/injury.py` → `results/injury.json`). Can the same pitcher-vs-himself engine warn a coach before an
 injury? We scored 7,070 pitcher-months (live mode) on command drift plus fastball-velocity drop, labelled by an IL placement

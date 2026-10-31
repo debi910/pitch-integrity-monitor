@@ -108,6 +108,8 @@ def main():
     live = pd.read_csv(ROOT / "results/league_cells_anon.csv") if (ROOT / "results/league_cells_anon.csv").exists() else None
     if live is not None and "score_live" in live:
         out["case"]["same_day_alerts"] = int(((live["month"] == "2025-05") & (live["score_live"] >= 3)).sum())
+    tf = ROOT / "results/threshold_free.json"
+    out["tfree"] = json.loads(tf.read_text()) if tf.exists() else None
     pw = ROOT / "results/power.json"
     out["power"] = json.loads(pw.read_text()) if pw.exists() else None
     rob = ROOT / "results/robustness.json"

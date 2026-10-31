@@ -743,7 +743,7 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
     el.appendChild(g); });
   const S = R.summary, B = R.beta_binomial;
   document.getElementById('robustNote').innerHTML = `Volume floor and shrinkage barely matter (#22–#26 at the 30% threshold). <b>The dirt threshold does</b>: at 20% or 40% the month falls to #76–#168. Alerts stay at ${S.alerts_range[0]}–${S.alerts_range[1]} across all 27. ` +
-    `A null that allows normal month-to-month wobble (beta-binomial, ρ=${B.rho.toFixed(4)}) cuts alerts from 27 to <b>${B.alerts}</b> (${B.expected_alerts_under_null} expected by chance) and moves Clase up to <b>#${B.rank_clase_2025_05}</b>, but his month then scores ${B.score_clase_2025_05}, just short of the alert line. So it is a ranked review list, not an alarm.`;
+    `A null that allows normal month-to-month wobble (beta-binomial, ρ=${B.rho.toFixed(4)}) cuts alerts from 27 to <b>${B.alerts}</b> (${B.expected_alerts_under_null} expected by chance) and moves Clase up to <b>#${B.rank_clase_2025_05}</b>, but his month then scores ${B.score_clase_2025_05}, just short of the alert line. So it is a ranked review list, not an alarm.` + (DATA.tfree ? ` <b>Without any hand-picked cut-off</b>, scoring all 11 cut-offs from 10% to 60% below the zone and averaging, the month ranks <b>#${DATA.tfree.methods.mean.rank_clase_2025_05}</b> of ${fmt(DATA.tfree.cells)} (top ${(DATA.tfree.methods.mean.rank_clase_2025_05/DATA.tfree.cells*100).toFixed(1)}%), and it stays inside the top ${(Math.max(...Object.values(DATA.tfree.clase_2025_05_rank_by_cutoff))/DATA.tfree.cells*100).toFixed(1)}% at every single cut-off. At the same alert volume it no longer crosses the line.` : '');
 })();
 
 /* ---------- detection power ---------- */

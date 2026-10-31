@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- Threshold-free check (`eval/threshold_free.py`): averaged over 11 cut-offs Clase May 2025 ranks #38 of 8,339 (top 0.5%); top 2.3% at every cut-off; no alert at matched volume. On page (stress test note) and README.
 - Ran the pre-registered injury test (`eval/injury.py`, IL data from StatsAPI via laptop, ffa63ce). Drift AUC 0.553 vs velocity-drop 0.558 (diff −0.005, CI −0.020 to +0.009): ties the simple rule, reported on page (06 Method) and README, not shipped as a feature.
 - PRE-REGISTRATION (coach mode): `pim/drift.py` (command + velocity drift vs own earlier months) and `eval/injury.py` (does drift precede an IL placement within 30 days? vs velocity-drop baseline) committed BEFORE any injured-list data was joined. Constants fixed here.
 - Linked deck, model card, data card, CI badge and CLI usage from README and page footer.
