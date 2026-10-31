@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - name: Golden-path tests (no look-ahead, 18/18 labels, frozen monitor, CLI)
+        run: pytest -q
+      - name: CLI smoke test
+        run: python -m pim data/slim/pitchers_clase_ortiz.parquet --mode live --top 5

@@ -1,0 +1,5 @@
+.venv
+data/raw
+video
+**/__pycache__
+.git
