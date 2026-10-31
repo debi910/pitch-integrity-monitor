@@ -149,6 +149,12 @@ footer{padding:48px 0 80px;color:var(--faint);font-size:13px}
 .btn:hover{border-color:#CFC8BB}.btn:active{transform:scale(.97)}
 .fine{font-size:12.5px;color:var(--muted);margin-top:18px}
 .empty{color:var(--faint);text-align:center;padding:80px 0}
+/* users */
+.users{display:grid;grid-template-columns:.6fr 1fr 1fr 1fr;gap:24px;margin-top:40px;padding-top:22px;border-top:1px solid var(--line)}
+.users .mono{font-size:11px;letter-spacing:.1em;color:var(--red)}
+.users b{font-weight:600;font-size:14.5px}.users p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+@media (max-width:900px){.users{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.users{grid-template-columns:1fr}}
 /* photos */
 .banner{margin:56px 0 0;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
 .banner img{display:block;width:100%;height:clamp(220px,30vw,380px);object-fit:cover;object-position:center 88%;transform:scale(1.04);transition:transform 1.6s var(--ease-out)}
@@ -193,6 +199,12 @@ svg text{font-family:var(--sans)}
   <div class="verdict reveal">
     <div class="vcard"><div class="vicon no">✕</div><div><h3>Single pitches: no</h3><p>A rigged ball in the dirt looks like an ordinary miss. A one-line rule beat our own model.</p></div></div>
     <div class="vcard"><div class="vicon yes">✓</div><div><h3>Monthly patterns: sometimes</h3><p id="verdict-yes">A pitcher's own first-pitch miss rate jumped when the scheme peaked. We show where that works and where it doesn't.</p></div></div>
+  </div>
+  <div class="users reveal">
+    <div><span class="mono">WHO USES IT</span></div>
+    <div><b>League integrity office</b><p>A short monthly review list, ranked against each pitcher's own normal.</p></div>
+    <div><b>Front offices</b><p>An early, private heads-up on their own pitchers, before a betting firm calls.</p></div>
+    <div><b>Sportsbook trading desks</b><p>Performance context next to unusual betting volume on a pitcher.</p></div>
   </div>
   <!--IMG:hero--><figure class="banner reveal"><img src="__IMG_hero__" alt="A major-league ballpark"><figcaption><span>Every pitch in MLB is tracked by cameras to within an inch. That record is public.</span><small>__CREDIT_hero__</small></figcaption></figure><!--/IMG:hero-->
 </div></header>
@@ -447,7 +459,7 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   ground.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#A9825A').attr('stroke-dasharray','2 4');
   ground.append('text').attr('x',W-m.r-6).attr('y',y(0)+16).attr('text-anchor','end').attr('fill','#8C6440').attr('font-size',11).text('the dirt');
   const cloudG = svg.append('g'), zoneR = svg.append('rect').attr('fill','none').attr('stroke',C.ink).attr('stroke-width',1.5).attr('rx',2);
-  const plate = svg.append('path').attr('fill','#1B1F25').attr('stroke',C.bar);
+  const plate = svg.append('path').attr('fill','#FFFFFF').attr('stroke',C.bar);
   const ring = svg.append('circle').attr('r',22).attr('fill','none').attr('stroke',C.amber).attr('stroke-opacity',.35);
   const dot = svg.append('circle').attr('r',8).attr('fill',C.amber).attr('stroke',C.bg).attr('stroke-width',2.5);
   let first = true;
