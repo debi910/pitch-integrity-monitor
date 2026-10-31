@@ -11,3 +11,4 @@
 - Eval 1 (`eval/within_pitcher.py`): v1 LOSES to the simple spiked-ball rule within Clase (AP 0.10 vs 0.20; 2 vs 5 named pitches in top 18). 6 of 18 named pitches were not balls. Result kept and reported.
 - Pivot: pattern monitor (`pim/monitor.py`), template taken from the DOJ indictment text (first pitch, ball in the dirt). Frozen before the league-wide eval.
 - Streamlit app (`app.py`), lean app requirements, golden-path tests (no look-ahead, labels matched, baseline sanity, monitor volume).
+- UI rebuild: animated story page (`web/template.html` -> `docs/index.html` via `scripts/build_web.py`, d3 v7.9.0 inlined), embedded in Streamlit; upload tab kept.

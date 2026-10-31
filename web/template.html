@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitch Integrity Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>/*__D3__*/</script>
+<style>
+:root{
+  --bg:#0B0D10; --surface:#12151A; --surface-2:#171B21; --line:#232830; --ink:#ECE8DF; --muted:#8A909A; --faint:#5A606A;
+  --amber:#F5B841; --amber-dim:rgba(245,184,65,.14); --red:#FF6B5A; --teal:#5CC8B8; --teal-dim:rgba(92,200,184,.12);
+  --ease-out:cubic-bezier(.23,1,.32,1); --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --serif:"Instrument Serif",Georgia,serif; --sans:Inter,system-ui,-apple-system,Segoe UI,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-decoration-color:var(--faint);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--amber)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono)}
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:rgba(11,13,16,.78);backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:24px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;letter-spacing:.01em;white-space:nowrap}
+.brand-mark{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--amber);position:relative}
+.brand-mark:after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--amber)}
+nav .links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav .links a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap;transition:color .2s ease,background-color .2s ease}
+nav .links a:hover,nav .links a.on{color:var(--ink);background:var(--surface-2)}
+/* type */
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;display:flex;gap:10px;align-items:center}
+.eyebrow:before{content:"";width:18px;height:1px;background:var(--amber)}
+h1{font:400 clamp(44px,7vw,88px)/.98 var(--serif);letter-spacing:-.02em;margin:0 0 22px;max-width:14ch}
+h1 em{color:var(--amber);font-style:italic}
+h2{font:400 clamp(32px,4.4vw,52px)/1.04 var(--serif);letter-spacing:-.015em;margin:0 0 14px;max-width:22ch}
+h3{font:600 15px/1.3 var(--sans);margin:0 0 6px}
+.lede{font-size:18px;color:var(--muted);max-width:62ch;margin:0}
+.lede b{color:var(--ink);font-weight:500}
+section{padding:112px 0;border-bottom:1px solid var(--line)}
+/* hero */
+.hero{padding:96px 0 88px}
+.allege{display:inline-flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);border:1px solid var(--line);background:var(--surface);padding:7px 12px 7px 10px;border-radius:999px;margin-bottom:34px}
+.allege i{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px var(--amber-dim)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:56px}
+.stat{background:var(--surface);padding:22px 22px 20px}
+.stat .v{font:400 46px/1 var(--serif);letter-spacing:-.02em}
+.stat .l{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.45}
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.vcard{border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,var(--surface),var(--bg))}
+.vicon{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 15px var(--sans)}
+.vicon.no{background:rgba(255,107,90,.12);color:var(--red)} .vicon.yes{background:var(--teal-dim);color:var(--teal)}
+.vcard p{margin:2px 0 0;color:var(--muted);font-size:14px}
+/* generic */
+.grid2{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;margin-top:48px;align-items:start}
+.grid2>*{min-width:0}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px;align-items:center}
+.hero-art{position:relative}
+.hero-art .cap{font:500 11px var(--mono);color:var(--faint);letter-spacing:.06em;text-align:center;margin-top:6px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.panel-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em;margin-bottom:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--mono);padding:6px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.amber{color:var(--amber);border-color:rgba(245,184,65,.4);background:var(--amber-dim)}
+.chip.teal{color:var(--teal);border-color:rgba(92,200,184,.35);background:var(--teal-dim)}
+.chip.red{color:var(--red);border-color:rgba(255,107,90,.35);background:rgba(255,107,90,.1)}
+button{font:inherit;color:inherit}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;position:relative}
+.seg button{position:relative;z-index:1;border:0;background:none;padding:8px 14px;border-radius:7px;font-size:13px;color:var(--muted);cursor:pointer;transition:color .2s ease,transform .16s var(--ease-out)}
+.seg button:active{transform:scale(.97)}
+.seg button.on{color:var(--bg)}
+.seg .thumb{position:absolute;z-index:0;top:3px;bottom:3px;border-radius:7px;background:var(--ink);transition:left .26s var(--ease-out),width .26s var(--ease-out)}
+.tip{position:fixed;pointer-events:none;z-index:50;background:#1E232B;border:1px solid #2E343D;border-radius:10px;padding:9px 11px;font-size:12.5px;line-height:1.45;max-width:260px;opacity:0;transform:translateY(4px) scale(.98);transition:opacity .14s ease-out,transform .14s var(--ease-out);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.tip.on{opacity:1;transform:none}
+.tip b{font-weight:600}
+.tip .k{color:var(--muted)}
+/* pitch section */
+.pills{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;mask-image:linear-gradient(90deg,#000 92%,transparent)}
+.pill{flex-shrink:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;text-align:left;cursor:pointer;transition:border-color .2s ease,background-color .2s ease,transform .16s var(--ease-out)}
+.pill:active{transform:scale(.97)}
+.pill .pd{font:500 12px var(--mono);color:var(--ink)} .pill .pb{font-size:11.5px;color:var(--muted)}
+.pill.on{border-color:var(--amber);background:var(--amber-dim)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:16px 0}
+.fact{background:var(--surface);padding:12px 14px}
+.fact .k{font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
+.fact .v{font-size:15px;margin-top:2px}
+.meter{margin:14px 0}
+.meter .top{display:flex;justify-content:space-between;font-size:13.5px}
+.meter .top span:last-child{color:var(--muted)}
+.bar{height:8px;background:var(--bg);border:1px solid var(--line);border-radius:99px;margin-top:7px;overflow:hidden;position:relative}
+.bar i{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);border-radius:99px;transition:transform .6s var(--ease-out)}
+.bar.lo i{background:var(--teal)} .bar.mid i{background:var(--amber)} .bar.hi i{background:var(--red)}
+.meter .why{font-size:12.5px;color:var(--muted);margin-top:5px}
+.rankline{display:flex;align-items:baseline;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.rankline .big{font:400 40px/1 var(--serif)}
+/* waffle */
+.waffle-head{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin:40px 0 16px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)}
+.kpi .v{font:400 36px/1 var(--serif)} .kpi .l{font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.callout{border-left:2px solid var(--amber);padding:4px 0 4px 16px;margin-top:28px;max-width:70ch;color:var(--muted)}
+.callout b{color:var(--ink);font-weight:500}
+/* league */
+.range{width:100%;-webkit-appearance:none;appearance:none;height:4px;background:var(--line);border-radius:99px;outline:none;margin:14px 0 6px}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--line);cursor:grab;transition:transform .16s var(--ease-out)}
+.range::-webkit-slider-thumb:active{transform:scale(1.15);cursor:grabbing}
+.range::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:3px solid var(--bg);cursor:grab}
+.pending{border:1px dashed var(--line);border-radius:14px;padding:28px;color:var(--muted);text-align:center}
+/* stops */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px}
+.card{border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--surface)}
+.card .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);margin-bottom:14px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+details{border-top:1px solid var(--line);padding:16px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-weight:500}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--muted);transition:transform .2s var(--ease-out)}
+details[open] summary:after{transform:rotate(45deg)}
+details p,details li{color:var(--muted);font-size:14.5px;max-width:75ch}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500;font-size:12px;font-family:var(--mono);letter-spacing:.03em}
+td.n{font-variant-numeric:tabular-nums;text-align:right} th.n{text-align:right}
+tr.ours td{color:var(--ink)} tr.best td:first-child:after{content:"  best";color:var(--teal);font:500 11px var(--mono)}
+footer{padding:48px 0 80px;color:var(--faint);font-size:13px}
+/* reveal */
+.reveal{opacity:0;transform:translateY(10px);filter:blur(4px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out),filter .7s var(--ease-out)}
+.reveal.in{opacity:1;transform:none;filter:none}
+svg text{font-family:var(--sans)}
+@media (max-width:900px){.grid2,.hero-grid{grid-template-columns:1fr}.hero-art{max-width:420px}.stats{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.verdict{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr 1fr}}
+@media (max-width:560px){.wrap{padding:0 16px}.cards{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}nav .links{display:none}section{padding:80px 0}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none;filter:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="brand"><span class="brand-mark"></span>Pitch Integrity Monitor</div>
+  <div class="links">
+    <a href="#pitch">The pitch</a><a href="#single">One pitch</a><a href="#pattern">The pattern</a><a href="#league">All of MLB</a><a href="#stops">Limits</a><a href="#method">Method</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="allege reveal"><i></i>Allegations, not findings. Both pitchers have pleaded not guilty; trial is set for November 2026.</div>
+  <div class="hero-grid"><div>
+  <h1 class="reveal">Can pitch data catch a <em>rigged pitch?</em></h1>
+  <p class="lede reveal">In 2025 two Cleveland pitchers were charged with selling individual pitches to bettors. Every alarm so far came from the betting side. We asked whether the <b>pitch-tracking data itself</b> gives a fixer away, and how many innocent pitchers an alarm like that would also catch.</p>
+  </div><div class="hero-art reveal"><svg id="hero-svg" viewBox="0 0 400 440" width="100%" aria-label="Every Clase first pitch, named pitches highlighted"></svg><div class="cap">EVERY CLASE FIRST PITCH 2023–25 · <span style="color:var(--amber)">● NAMED IN COURT</span></div></div></div>
+  <div class="stats reveal">
+    <div class="stat"><div class="v num" data-count="18">0</div><div class="l">Clase pitches named by prosecutors (Sept 18 2026 filing)</div></div>
+    <div class="stat"><div class="v num" data-count="6">0</div><div class="l">of those 18 were not even balls, so location can't reveal them</div></div>
+    <div class="stat"><div class="v num" id="stat-pitches">0</div><div class="l">MLB pitches scanned, 2023–25 (Baseball Savant)</div></div>
+    <div class="stat"><div class="v num" id="stat-alerts">–</div><div class="l" id="stat-alerts-l">alerts a month across MLB at p ≤ 0.001</div></div>
+  </div>
+  <div class="verdict reveal">
+    <div class="vcard"><div class="vicon no">✕</div><div><h3>Single pitches: no</h3><p>A rigged ball in the dirt looks like an ordinary miss. A one-line rule beat our own model.</p></div></div>
+    <div class="vcard"><div class="vicon yes">✓</div><div><h3>Monthly patterns: sometimes</h3><p id="verdict-yes">A pitcher's own first-pitch miss rate jumped when the scheme peaked. We show where that works and where it doesn't.</p></div></div>
+  </div>
+</div></header>
+
+<section id="pitch"><div class="wrap">
+  <div class="eyebrow reveal">01 · The pitch</div>
+  <h2 class="reveal">A nothing pitch in a decided game.</h2>
+  <p class="lede reveal">Oct 5 2024, ALDS Game 1, ninth inning, Cleveland up 7–0. Emmanuel Clase's first pitch to Matt Vierling bounces in the dirt. Nobody in the park blinks. Two years later it is on the prosecutors' list. <b>Pick any of the 18</b> and see how strange it was for him.</p>
+  <div class="grid2">
+    <div class="panel reveal">
+      <div class="panel-h"><span>CATCHER'S VIEW · FEET</span><span id="zone-cap">vs his first-pitch sliders</span></div>
+      <svg id="zone" viewBox="0 0 480 520" width="100%" role="img" aria-label="Strike zone chart"></svg>
+      <div class="legend"><span><i class="sw" style="background:var(--teal);opacity:.6"></i>where his other first pitches of this type land</span><span><i class="sw" style="background:var(--amber);border-radius:50%"></i>court-named pitch</span></div>
+    </div>
+    <div class="reveal">
+      <div class="pills" id="pills"></div>
+      <div class="facts" id="facts"></div>
+      <h3 style="margin-top:22px">How unusual was it <span style="color:var(--muted);font-weight:400">for him?</span></h3>
+      <div id="meters"></div>
+      <div class="rankline"><span class="big num" id="rank">#–</span><span style="color:var(--muted);font-size:14px" id="rank-l">of his pitches, ranked most unusual first</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="single"><div class="wrap">
+  <div class="eyebrow reveal">02 · Result one</div>
+  <h2 class="reveal">One pitch isn't enough.</h2>
+  <p class="lede reveal">Each square is one of Clase's <b class="num" id="n-clase">2,972</b> pitches from 2023 to 2025, ordered from most to least suspicious. The <span style="color:var(--amber)">amber</span> ones are the 18 named in court. A perfect detector would pack them into the top-left corner. We froze our model in git <b>before</b> looking at this chart.</p>
+  <div class="waffle-head reveal">
+    <div class="seg" id="seg-method"><span class="thumb"></span>
+      <button data-k="v1" class="on">Our pitch model</button><button data-k="b1">Simple "spiked ball" rule</button><button data-k="rnd">Random</button>
+    </div>
+    <span class="chip" id="method-note">pre-registered at commit 5fa3b3e</span>
+  </div>
+  <div class="panel reveal"><svg id="waffle" width="100%" role="img" aria-label="Waffle chart of ranked pitches"></svg>
+    <div class="legend"><span><i class="sw" style="outline:1.5px solid var(--ink);outline-offset:-1px"></i>top 18 (where a perfect detector puts them)</span><span><i class="sw" style="background:var(--amber)"></i>court-named</span><span><i class="sw" style="background:#2A3038"></i>every other pitch</span></div>
+  </div>
+  <div class="kpis reveal">
+    <div class="kpi"><div class="v num" id="k-top18">–</div><div class="l">named pitches in the top 18</div></div>
+    <div class="kpi"><div class="v num" id="k-top100">–</div><div class="l">named pitches in the top 100</div></div>
+    <div class="kpi"><div class="v num" id="k-med">–</div><div class="l">median rank of a named pitch</div></div>
+  </div>
+  <div class="reveal" id="within-table"></div>
+  <div class="callout reveal"><b>Why our model lost:</b> it looks for pitches that are strange for him, but a rigged ball in the dirt is a normal-looking miss, and <b>6 of the 18</b> were called strikes, fouls or swinging strikes, bets on speed or pitch type that leave no trace in location. Asking "is this one pitch suspicious?" is the wrong question.</div>
+</div></section>
+
+<section id="pattern"><div class="wrap">
+  <div class="eyebrow reveal">03 · Result two</div>
+  <h2 class="reveal">The pattern shows up in the rate.</h2>
+  <p class="lede reveal">The indictment says the rigged pitches were usually <b>the first pitch of an at-bat</b>, thrown <b>in the dirt</b>. So instead of judging single pitches, we track how often each pitcher does that every month and compare it with <b>his own</b> normal.</p>
+  <div class="waffle-head reveal">
+    <div class="seg" id="seg-pitcher"><span class="thumb"></span><button data-k="Emmanuel Clase" class="on">Emmanuel Clase</button><button data-k="Luis L. Ortiz">Luis L. Ortiz</button></div>
+    <span class="chip" id="month-note"></span>
+  </div>
+  <div class="panel reveal"><svg id="months" width="100%" role="img" aria-label="Monthly first-pitch dirt rate"></svg>
+    <div class="legend"><span><i class="sw" style="background:var(--amber)"></i>month containing a court-named pitch</span><span><i class="sw" style="background:#3A414B"></i>other months</span><span><i class="sw" style="background:var(--teal);height:2px;width:14px"></i>his own baseline</span><span><i class="sw" style="background:var(--red);border-radius:50%"></i>alert (p ≤ 0.001)</span></div>
+  </div>
+  <div class="callout reveal" id="pattern-callout"></div>
+</div></section>
+
+<section id="league"><div class="wrap">
+  <div class="eyebrow reveal">04 · The real test</div>
+  <h2 class="reveal">How many innocent pitchers does it flag?</h2>
+  <p class="lede reveal">An alarm is only useful if an integrity desk can afford to check it. Each dot is one pitcher-month in MLB from 2023 to 2025. Further right means a bigger jump above that pitcher's own baseline. <b>Drag the threshold</b> to see the trade-off. Other pitchers are never named.</p>
+  <div id="league-body" class="reveal"></div>
+</div></section>
+
+<section id="stops"><div class="wrap">
+  <div class="eyebrow reveal">05 · Where it stops</div>
+  <h2 class="reveal">Built to flag, never to accuse.</h2>
+  <div class="cards">
+    <div class="card reveal"><div class="ic">⚑</div><h3>Never says "rigged"</h3><p>It ranks what is unusual for this pitcher and hands it to a human with the video.</p></div>
+    <div class="card reveal"><div class="ic">§</div><h3>Labels are allegations</h3><p>From a court filing. The earlier list covered 48 games, so some "false alarms" may not be false.</p></div>
+    <div class="card reveal"><div class="ic">◌</div><h3>Blind to speed bets</h3><p>Bets on velocity or pitch type leave no trace in location, and it can't see them.</p></div>
+    <div class="card reveal"><div class="ic">◐</div><h3>No names</h3><p>Other flagged pitchers stay anonymous. Most are slumps, injuries or a new pitch.</p></div>
+  </div>
+</div></section>
+
+<section id="method"><div class="wrap">
+  <div class="eyebrow reveal">06 · Method & data</div>
+  <h2 class="reveal">Code computes. Nothing guesses.</h2>
+  <div class="reveal" style="margin-top:32px">
+    <details open><summary>Data</summary><ul>
+      <li><b>Every MLB pitch 2023–25</b> from <a href="https://baseballsavant.mlb.com/statcast_search" target="_blank" rel="noopener">Baseball Savant</a> (Statcast) via pybaseball. Real data, exact use case.</li>
+      <li><b>18 named pitches</b> from the Sept 18 2026 filing as reported by <a href="https://www.sportsbettingdime.com/news/industry/new-court-documents-show-18-alleged-emmanuel-clase-rigged-pitches/" target="_blank" rel="noopener">Sports Betting Dime</a> and <a href="https://www.tsn.ca/mlb/article/prosecutors-identify-18-alleged-rigged-pitches-for-clase-trial-n1-49980924/" target="_blank" rel="noopener">TSN</a>, matched one-to-one to Statcast rows. Ortiz game dates from the <a href="https://www.justice.gov/usao-edny/pr/two-current-major-league-baseball-players-charged-sports-betting-and-money-laundering" target="_blank" rel="noopener">DOJ release</a>.</li>
+      <li>Nothing simulated or mocked.</li></ul></details>
+    <details><summary>Pitch model (v1)</summary><p>For each pitch: how rare its location is for that pitch type and batter side, how often he picks that pitch in that count, and how unusual its speed is. Each is compared only with his <b>earlier games</b> (no look-ahead, tested), then combined with Fisher's method. Frozen at commit 5fa3b3e before evaluation.</p></details>
+    <details><summary>Pattern monitor (v2)</summary><p>Template from the indictment's own words: first pitch of an at-bat, taken for a ball, more than 30% of the zone height below the bottom. Each pitcher-month with 20+ first pitches is scored with a binomial tail test against his own rate in his other months, shrunk toward the league rate. Score = −log10 p.</p></details>
+    <details><summary>Honest limitations</summary><ul>
+      <li>Only 18 labelled pitches, so intervals are wide.</li>
+      <li>We designed v2 after seeing the 18 labels. The league test is the honest check, because it is dominated by pitchers the template never saw.</li>
+      <li>No 2022 data, so early-2023 baselines lean on the league rate.</li></ul></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Pitch Integrity Monitor · AQX Sports Analytics Data Bowl 4.0 · Code: <a href="https://github.com/debi910/pitch-integrity-monitor" target="_blank" rel="noopener">github.com/debi910/pitch-integrity-monitor</a></div></footer>
+<div class="tip" id="tip"></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = d3.format(',');
+const C = {amber:'#F5B841', teal:'#5CC8B8', red:'#FF6B5A', ink:'#ECE8DF', muted:'#8A909A', faint:'#5A606A', line:'#232830', cell:'#2A3038', bg:'#0B0D10'};
+const EASE = d3.easeCubicOut, EASE_IO = d3.easeCubicInOut;
+
+/* ---------- reveal + nav highlight ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach((el,i) => { el.style.transitionDelay = (el.closest('.cards,.stats,.verdict') ? (i%4)*60 : 0)+'ms'; io.observe(el); });
+const navObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.querySelectorAll('nav .links a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#'+e.target.id)); }), {rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+function onFirstView(el, fn){ const o = new IntersectionObserver(es => { if (es[0].isIntersecting){ o.disconnect(); fn(); } }, {threshold:.25}); o.observe(el); }
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById('tip');
+function showTip(html, ev){ tip.innerHTML = html; tip.classList.add('on'); moveTip(ev); }
+function moveTip(ev){ const x = Math.min(ev.clientX + 14, innerWidth - 280), y = ev.clientY + 14; tip.style.left = x+'px'; tip.style.top = y+'px'; }
+function hideTip(){ tip.classList.remove('on'); }
+
+/* ---------- count-up ---------- */
+function countUp(el, to, dec=0){
+  if (reduce){ el.textContent = dec ? to.toFixed(dec) : fmt(to); return; }
+  const t0 = performance.now(), dur = 1100;
+  (function f(t){ const k = Math.min(1,(t-t0)/dur), v = to*EASE(k); el.textContent = dec ? v.toFixed(dec) : fmt(Math.round(v)); if (k<1) requestAnimationFrame(f); })(t0);
+}
+function setSeg(seg, btn){ seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b===btn)); const th = seg.querySelector('.thumb'); th.style.left = btn.offsetLeft+'px'; th.style.width = btn.offsetWidth+'px'; }
+function initSeg(id, cb){ const seg = document.getElementById(id); const on = seg.querySelector('button.on'); requestAnimationFrame(() => setSeg(seg, on)); seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.classList.contains('on')) return; setSeg(seg, b); cb(b.dataset.k); }); addEventListener('resize', () => setSeg(seg, seg.querySelector('button.on'))); }
+
+/* ---------- hero stats ---------- */
+const L = DATA.league;
+onFirstView(document.querySelector('.stats'), () => {
+  document.querySelectorAll('[data-count]').forEach(el => countUp(el, +el.dataset.count));
+  countUp(document.getElementById('stat-pitches'), L ? L.n_pitches : DATA.pitches.length);
+  if (L){ const a = L.alerts['score_audit>=3.0']; countUp(document.getElementById('stat-alerts'), a.per_month_league_wide, 1); }
+  else { document.getElementById('stat-alerts-l').textContent = 'league-wide alert rate: test still running'; }
+  if (!L) document.querySelector('.stats .stat:nth-child(3) .l').textContent = 'Clase pitches scanned (league-wide pull still running)';
+});
+
+
+/* ---------- hero art: real Clase first pitches ---------- */
+(function heroArt(){
+  const svg = d3.select('#hero-svg'), W = 400, H = 440;
+  const x = d3.scaleLinear([-2.6,2.6],[0,W]), y = d3.scaleLinear([-1.8,5],[H,0]);
+  svg.append('rect').attr('x',0).attr('y',y(0)).attr('width',W).attr('height',H-y(0)).attr('fill','#1A140E').attr('opacity',.5);
+  svg.append('line').attr('x1',0).attr('x2',W).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#5B4630').attr('stroke-dasharray','2 4');
+  svg.append('rect').attr('x',x(-.708)).attr('width',x(.708)-x(-.708)).attr('y',y(3.4)).attr('height',y(1.6)-y(3.4)).attr('fill','none').attr('stroke',C.ink).attr('stroke-opacity',.7).attr('rx',2);
+  const fp = DATA.pitches.filter(p => p.fp && p.x != null).sort((a,b) => (a.id?1:0)-(b.id?1:0));
+  const dots = svg.append('g').selectAll('circle').data(fp).join('circle')
+    .attr('cx', p => x(p.x)).attr('cy', p => y(p.z)).attr('r', p => p.id ? 5.5 : 2.2)
+    .attr('fill', p => p.id ? C.amber : C.teal).attr('opacity', 0).attr('stroke', p => p.id ? C.bg : 'none').attr('stroke-width',1.5);
+  if (reduce){ dots.attr('opacity', p => p.id ? 1 : .35); return; }
+  dots.attr('cy', p => y(p.z) - 30).transition().delay((p,i) => p.id ? 1400 + i%18*40 : i*1.2).duration(p => p.id ? 500 : 700).ease(EASE)
+    .attr('cy', p => y(p.z)).attr('opacity', p => p.id ? 1 : .35);
+  svg.append('g').selectAll('circle').data(fp.filter(p => p.id)).join('circle').attr('cx', p => x(p.x)).attr('cy', p => y(p.z)).attr('r',5).attr('fill','none').attr('stroke',C.amber)
+    .attr('opacity',0).call(sel => (function pulse(){ sel.attr('r',5).attr('opacity',.6).transition().delay((p,i) => 2200 + i*120).duration(1400).ease(EASE).attr('r',16).attr('opacity',0); })());
+})();
+
+/* ================= 01 THE PITCH ================= */
+const P = DATA.pitches, named = P.filter(p => p.id).sort((a,b) => a.d.localeCompare(b.d));
+const resLabel = r => ({ball:'Ball', blocked_ball:'Ball (blocked)', called_strike:'Called strike', foul:'Foul', swinging_strike:'Swinging strike'}[r] || r);
+const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t] || t);
+(function zone(){
+  const svg = d3.select('#zone'), W = 480, H = 520, m = {l:44,r:16,t:16,b:40};
+  const x = d3.scaleLinear([-2.4,2.4],[m.l, W-m.r]), y = d3.scaleLinear([-1.6,5],[H-m.b, m.t]);
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(5).tickSize(0).tickPadding(10)).call(g => g.select('.domain').remove()).selectAll('text').attr('fill',C.faint).attr('font-size',11);
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(6).tickSize(0).tickPadding(10)).call(g => g.select('.domain').remove()).selectAll('text').attr('fill',C.faint).attr('font-size',11);
+  const ground = svg.append('g');
+  ground.append('rect').attr('x',m.l).attr('width',W-m.l-m.r).attr('y',y(0)).attr('height',y(-1.6)-y(0)).attr('fill','url(#dirt)');
+  const defs = svg.append('defs');
+  const lg = defs.append('linearGradient').attr('id','dirt').attr('x1',0).attr('x2',0).attr('y1',0).attr('y2',1);
+  lg.append('stop').attr('offset',0).attr('stop-color','#3A2A1A').attr('stop-opacity',.55); lg.append('stop').attr('offset',1).attr('stop-color','#3A2A1A').attr('stop-opacity',0);
+  ground.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(0)).attr('y2',y(0)).attr('stroke','#5B4630').attr('stroke-dasharray','2 4');
+  ground.append('text').attr('x',W-m.r-6).attr('y',y(0)+16).attr('text-anchor','end').attr('fill','#8C6D4A').attr('font-size',11).text('the dirt');
+  const cloudG = svg.append('g'), zoneR = svg.append('rect').attr('fill','none').attr('stroke',C.ink).attr('stroke-width',1.5).attr('rx',2);
+  const plate = svg.append('path').attr('fill','#1B1F25').attr('stroke','#3A414B');
+  const ring = svg.append('circle').attr('r',22).attr('fill','none').attr('stroke',C.amber).attr('stroke-opacity',.35);
+  const dot = svg.append('circle').attr('r',8).attr('fill',C.amber).attr('stroke',C.bg).attr('stroke-width',2.5);
+  let first = true;
+  function draw(p){
+    const top = p.top, bot = p.bot;
+    zoneR.transition().duration(first?0:450).ease(EASE_IO).attr('x',x(-.708)).attr('width',x(.708)-x(-.708)).attr('y',y(top)).attr('height',y(bot)-y(top));
+    plate.attr('d',`M${x(-.708)},${y(-1.25)} h${x(.708)-x(-.708)} l-6,10 l${-(x(.708)-x(-.708))/2+6},8 l${-(x(.708)-x(-.708))/2+6},-8 z`);
+    const pts = P.filter(q => q.fp && q.t === p.t && !q.id && q.x != null);
+    document.getElementById('zone-cap').textContent = `vs his ${fmt(pts.length)} other first-pitch ${tname(p.t).toLowerCase()}s`;
+    const dens = d3.contourDensity().x(q => x(q.x)).y(q => y(q.z)).size([W,H]).bandwidth(16).thresholds(9)(pts);
+    const op = d3.scaleLinear([0, dens.length-1],[.05,.5]);
+    const paths = cloudG.selectAll('path').data(dens);
+    paths.join(en => en.append('path').attr('opacity',0), up => up, ex => ex.remove())
+      .attr('d', d3.geoPath()).attr('fill',C.teal).transition().duration(first?900:300).ease(EASE).attr('opacity',(d,i) => op(i));
+    const tx = x(p.x), ty = y(p.z);
+    if (first && !reduce){
+      dot.attr('cx',tx).attr('cy',m.t-20).attr('opacity',0).transition().delay(500).duration(650).ease(d3.easeBounceOut).attr('cy',ty).attr('opacity',1);
+      ring.attr('cx',tx).attr('cy',ty).attr('r',8).attr('opacity',0).transition().delay(1150).duration(700).ease(EASE).attr('r',26).attr('opacity',1);
+    } else {
+      dot.transition().duration(450).ease(EASE_IO).attr('cx',tx).attr('cy',ty).attr('opacity',1);
+      ring.interrupt().attr('opacity',0).attr('cx',tx).attr('cy',ty).attr('r',8).transition().delay(380).duration(500).ease(EASE).attr('r',26).attr('opacity',1);
+    }
+    first = false;
+  }
+  function meter(label, p, why){
+    const u = 1 - p, cls = p < .05 ? 'hi' : p < .25 ? 'mid' : 'lo', word = p < .05 ? 'Very unusual' : p < .25 ? 'Somewhat unusual' : 'Normal for him';
+    return `<div class="meter"><div class="top"><span>${label}</span><span>${word}</span></div><div class="bar ${cls}"><i data-w="${Math.max(.03,u)}"></i></div><div class="why">${why}</div></div>`;
+  }
+  function select(p){
+    document.querySelectorAll('.pill').forEach(b => b.classList.toggle('on', +b.dataset.id === p.id));
+    const dt = new Date(p.d+'T12:00:00');
+    document.getElementById('facts').innerHTML = [
+      ['DATE', dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})], ['BATTER', p.bat], ['INNING · COUNT', `${p.inn} · ${p.c}`],
+      ['PITCH', `${tname(p.t)} ${p.v} mph`], ['RESULT', resLabel(p.res)], ['HEIGHT', p.z < 0 ? `${Math.abs(p.z).toFixed(1)} ft into the dirt` : `${p.z.toFixed(1)} ft`]
+    ].map(([k,v]) => `<div class="fact"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+    const oneIn = Math.max(1, Math.round(1/Math.max(p.pl,1e-4)));
+    document.getElementById('meters').innerHTML =
+      meter('Location', p.pl, oneIn > 1 ? `About 1 in ${fmt(oneIn)} of his ${tname(p.t).toLowerCase()}s to this side lands this far from his usual spot.` : 'Right where he usually throws it.') +
+      meter('Pitch choice', p.pc, `He throws a ${tname(p.t).toLowerCase()} about ${Math.round(p.pc*100)}% of the time in a ${p.c} count.`) +
+      meter('Velocity', p.pv, `Speed is ${p.pv < .05 ? 'far off' : p.pv < .25 ? 'a little off' : 'typical'} for his ${tname(p.t).toLowerCase()}.`);
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.bar i').forEach(i => i.style.transform = `scaleX(${i.dataset.w})`)));
+    document.getElementById('rank').textContent = '#'+fmt(p.r1);
+    document.getElementById('rank-l').textContent = `of his ${fmt(P.length)} pitches, ranked most unusual first by our pitch model`;
+    draw(p);
+  }
+  document.getElementById('pills').innerHTML = named.map(p => `<button class="pill" data-id="${p.id}"><div class="pd">${new Date(p.d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</div><div class="pb">${p.bat.split(' ').slice(-1)[0]} · ${resLabel(p.res).split(' ')[0]}</div></button>`).join('');
+  document.getElementById('pills').addEventListener('click', e => { const b = e.target.closest('.pill'); if (b) select(named.find(p => p.id === +b.dataset.id)); });
+  const start = named.find(p => p.d === '2024-10-05') || named[0];
+  onFirstView(document.getElementById('zone'), () => select(start));
+  document.querySelectorAll('.pill').forEach(b => { if (+b.dataset.id === start.id) b.classList.add('on'); });
+})();
+
+/* ================= 02 WAFFLE ================= */
+(function waffle(){
+  const N = P.length; document.getElementById('n-clase').textContent = fmt(N);
+  const svg = d3.select('#waffle'), cols = 104, s = 10, gap = 2, rows = Math.ceil(N/cols);
+  const W = cols*s, H = rows*s; svg.attr('viewBox',`0 0 ${W} ${H+4}`);
+  const pos = r => [((r-1)%cols)*s, Math.floor((r-1)/cols)*s];
+  const bg = svg.append('g');
+  bg.selectAll('rect').data(d3.range(N)).join('rect').attr('x',i => (i%cols)*s).attr('y',i => Math.floor(i/cols)*s).attr('width',s-gap).attr('height',s-gap).attr('rx',2).attr('fill',C.cell);
+  svg.append('path').attr('d',`M0,0 H${18*s-gap/2} V${s-gap/2} H0 Z`).attr('fill','none').attr('stroke',C.ink).attr('stroke-width',1.2);
+  const rng = d3.randomLcg(7), rnd = d3.shuffle(d3.range(1,N+1), rng);
+  const rk = {v1: p => p.r1, b1: p => p.rb, rnd: (p,i) => rnd[i]};
+  const W_ = DATA.within && DATA.within.methods;
+  const mkey = {v1:'PIM (ours)', b1:'B1 spiked-ball rule', rnd:'B3 random'};
+  const g = svg.append('g');
+  const cells = g.selectAll('rect').data(named).join('rect').attr('width',s-gap).attr('height',s-gap).attr('rx',2).attr('fill',C.amber)
+    .on('mousemove',(ev,p) => showTip(`<b>${p.bat}</b> · ${p.d}<br><span class="k">${tname(p.t)} ${p.v} mph · ${resLabel(p.res)}</span><br>rank <b class="num">#${fmt(cur(p,named.indexOf(p)))}</b> of ${fmt(N)}`, ev)).on('mouseleave', hideTip);
+  let key = 'v1'; const cur = (p,i) => rk[key](p,i);
+  function place(animate){
+    cells.transition().duration(animate && !reduce ? 750 : 0).delay((p,i) => animate && !reduce ? i*22 : 0).ease(EASE_IO)
+      .attr('x',(p,i) => pos(cur(p,i))[0]).attr('y',(p,i) => pos(cur(p,i))[1]);
+    const ranks = named.map((p,i) => cur(p,i)).sort((a,b) => a-b);
+    const top18 = ranks.filter(r => r <= 18).length, top100 = ranks.filter(r => r <= 100).length, med = d3.median(ranks);
+    [['k-top18',top18],['k-top100',top100],['k-med',med]].forEach(([id,v]) => countUp(document.getElementById(id), Math.round(v)));
+    document.getElementById('method-note').textContent = key === 'v1' ? 'pre-registered at commit 5fa3b3e' : key === 'b1' ? 'balls ranked by depth below the zone' : 'what chance alone does';
+  }
+  cells.attr('x',0).attr('y',-40).attr('opacity',0);
+  onFirstView(document.getElementById('waffle'), () => { cells.attr('opacity',1); place(true); });
+  initSeg('seg-method', k => { key = k; place(true); });
+  if (W_){
+    const rows_ = Object.entries(W_), best = rows_.reduce((a,b) => b[1].avg_precision > a[1].avg_precision ? b : a)[0];
+    document.getElementById('within-table').innerHTML = `<table><thead><tr><th>Method</th><th class="n">Avg precision</th><th class="n">95% CI</th><th class="n">In top 18</th><th class="n">In top 100</th><th class="n">Median rank</th></tr></thead><tbody>` +
+      rows_.map(([k,v]) => `<tr class="${k.includes('ours')?'ours':''} ${k===best?'best':''}"><td>${k.replace('PIM (ours)','Our pitch model (v1)').replace('B1 ','').replace('B2 ','').replace('B3 ','')}</td><td class="n">${v.avg_precision.toFixed(3)}</td><td class="n">${v.ap_95ci[0].toFixed(2)}–${v.ap_95ci[1].toFixed(2)}</td><td class="n">${v.hits_top18}</td><td class="n">${v.hits_top100}</td><td class="n">${fmt(v.median_rank)}</td></tr>`).join('') + `</tbody></table>`;
+  }
+})();
+
+/* ================= 03 MONTHS ================= */
+(function months(){
+  const svg = d3.select('#months'), W = 1040, H = 360, m = {l:44,r:16,t:30,b:40};
+  svg.attr('viewBox',`0 0 ${W} ${H}`);
+  const gx = svg.append('g').attr('transform',`translate(0,${H-m.b})`), gy = svg.append('g').attr('transform',`translate(${m.l},0)`);
+  const bars = svg.append('g'), base = svg.append('path').attr('fill','none').attr('stroke',C.teal).attr('stroke-width',2).attr('stroke-dasharray','5 4');
+  const marks = svg.append('g'), ann = svg.append('g');
+  function draw(name, animate){
+    const rows = DATA.months.filter(r => r.p === name);
+    const x = d3.scaleBand(rows.map(r => r.m),[m.l, W-m.r]).padding(.28);
+    const y = d3.scaleLinear([0, Math.max(.24, d3.max(rows, r => r.rate)*1.15)],[H-m.b, m.t]);
+    gx.call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickFormat(t => { const [yy,mm] = t.split('-'); return mm === '04' || rows[0].m === t ? `${d3.timeFormat('%b')(new Date(+yy, +mm-1))} '${yy.slice(2)}` : d3.timeFormat('%b')(new Date(+yy, +mm-1)); }))
+      .call(g => g.select('.domain').attr('stroke',C.line)).selectAll('text').attr('fill',C.faint).attr('font-size',11);
+    gy.transition().duration(300).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.0%')).tickSize(-(W-m.l-m.r)).tickPadding(8))
+      .on('end', () => gy.selectAll('line').attr('stroke',C.line)).selection().call(g => g.select('.domain').remove()).selectAll('text').attr('fill',C.faint).attr('font-size',11);
+    gy.selectAll('line').attr('stroke',C.line);
+    const color = r => r.named ? C.amber : '#3A414B';
+    bars.selectAll('rect').data(rows, r => r.m).join(
+      en => en.append('rect').attr('x', r => x(r.m)).attr('width', x.bandwidth()).attr('y', y(0)).attr('height',0).attr('rx',3),
+      up => up, ex => ex.transition().duration(200).attr('opacity',0).remove())
+      .attr('fill', color)
+      .on('mousemove',(ev,r) => showTip(`<b>${d3.timeFormat('%B %Y')(new Date(r.m+'-15'))}</b><br><span class="num">${r.k} of ${r.n}</span> first pitches in the dirt (<b class="num">${(r.rate*100).toFixed(1)}%</b>)<br><span class="k">his baseline ${(r.base*100).toFixed(1)}% · alert score ${r.s.toFixed(2)}${r.pct!=null?` · top ${r.pct.toFixed(1)}% of MLB`:''}</span>`, ev)).on('mouseleave', hideTip)
+      .transition().duration(animate && !reduce ? 650 : 250).delay((r,i) => animate && !reduce ? i*35 : 0).ease(EASE)
+      .attr('x', r => x(r.m)).attr('width', x.bandwidth()).attr('y', r => y(r.rate)).attr('height', r => y(0)-y(r.rate));
+    const line = d3.line().x(r => x(r.m)+x.bandwidth()/2).y(r => y(r.base)).curve(d3.curveMonotoneX);
+    base.attr('d', line(rows));
+    if (animate && !reduce){ const len = base.node().getTotalLength(); base.attr('stroke-dasharray',`${len} ${len}`).attr('stroke-dashoffset',len).transition().delay(300).duration(900).ease(EASE).attr('stroke-dashoffset',0).on('end',() => base.attr('stroke-dasharray','5 4')); }
+    else base.attr('stroke-dasharray','5 4');
+    const al = rows.filter(r => r.s >= 3);
+    marks.selectAll('circle').data(al, r => r.m).join('circle').attr('r',0).attr('fill',C.red).attr('cx', r => x(r.m)+x.bandwidth()/2).attr('cy', r => y(r.rate)-12)
+      .transition().delay(animate ? 700 : 0).duration(300).ease(EASE).attr('r',5);
+    ann.selectAll('*').remove();
+    const peak = rows.reduce((a,b) => b.s > a.s ? b : a);
+    const px = x(peak.m)+x.bandwidth()/2, py = y(peak.rate)-12;
+    const right = px > W*.6;
+    const ag = ann.append('g').attr('opacity',0);
+    ag.append('line').attr('x1',px).attr('x2',px + (right?-40:40)).attr('y1',py).attr('y2',m.t+8).attr('stroke',C.muted).attr('stroke-width',1);
+    ag.append('text').attr('x',px + (right?-46:46)).attr('y',m.t+4).attr('text-anchor',right?'end':'start').attr('fill',C.ink).attr('font-size',13).text(`${d3.timeFormat('%b %Y')(new Date(peak.m+'-15'))}: ${peak.k} of ${peak.n} first pitches in the dirt`);
+    ag.append('text').attr('x',px + (right?-46:46)).attr('y',m.t+21).attr('text-anchor',right?'end':'start').attr('fill',C.muted).attr('font-size',12).text(`${(peak.rate/peak.base).toFixed(1)}× his normal · p ≈ ${Math.pow(10,-peak.s).toPrecision(1)}`);
+    ag.transition().delay(animate ? 900 : 0).duration(400).attr('opacity',1);
+    const nm = rows.filter(r => r.named), hit = nm.filter(r => r.s >= 3);
+    document.getElementById('month-note').textContent = name === 'Emmanuel Clase' ? `${hit.length} of ${nm.length} named months raise an alert` : 'named pitches: 2 games, June 2025';
+    document.getElementById('pattern-callout').innerHTML = name === 'Emmanuel Clase'
+      ? `<b>What this shows:</b> in ${d3.timeFormat('%B %Y')(new Date(peak.m+'-15'))} Clase threw ${peak.k} of ${peak.n} first pitches into the dirt, ${(peak.rate/peak.base).toFixed(1)}× his own normal. A monitor reading this on the 1st of the next month would have raised an alert weeks before he was put on leave in July 2025. <b>But it is silent in 2023</b>, when nine named pitches were spread across months that look normal. Rates catch a scheme only when it is dense.`
+      : `<b>What this shows:</b> Ortiz is a starter with a higher, noisier dirt rate. His two named pitches (June 2025) don't move his monthly rate at all, and his biggest spikes are in months nobody has accused. That is exactly the kind of false alarm an integrity desk has to budget for.`;
+  }
+  let curName = 'Emmanuel Clase';
+  onFirstView(document.getElementById('months'), () => draw(curName, true));
+  initSeg('seg-pitcher', k => { curName = k; draw(k, true); });
+})();
+
+/* ================= 04 LEAGUE ================= */
+(function league(){
+  const box = document.getElementById('league-body');
+  if (!DATA.cells || !L){ box.innerHTML = '<div class="pending">The league-wide test is still running on the full 2023–25 pull. It appears here automatically when finished.</div>'; return; }
+  box.innerHTML = `<div class="panel"><div class="panel-h"><span>${fmt(L.n_pitcher_months)} PITCHER-MONTHS · ${fmt(L.n_pitchers)} PITCHERS</span><span>threshold p ≤ <b class="num" id="thr-p" style="color:var(--ink)"></b></span></div>
+    <svg id="swarm" width="100%"></svg><input class="range" id="thr" type="range" min="1" max="5" step="0.05" value="3" aria-label="Alert threshold">
+    <div class="legend"><span><i class="sw" style="background:#3A414B;border-radius:50%"></i>other pitcher-month (anonymous)</span><span><i class="sw" style="background:var(--amber);border-radius:50%"></i>month with a court-named pitch</span><span><i class="sw" style="background:var(--muted);border-radius:50%;opacity:.6"></i>Clase/Ortiz, other months</span></div></div>
+    <div class="kpis"><div class="kpi"><div class="v num" id="lk-a">–</div><div class="l">alerts across MLB, 2023–25</div></div><div class="kpi"><div class="v num" id="lk-m">–</div><div class="l">alerts per month for an integrity desk to review</div></div><div class="kpi"><div class="v num" id="lk-n">–</div><div class="l">named months caught</div></div></div>
+    <div id="league-table"></div><div class="callout" id="league-callout"></div>`;
+  const S = DATA.cells.s, NM = DATA.cells.named, LB = DATA.cells.label, nMonths = DATA.cells.n_months;
+  const svg = d3.select('#swarm'), W = 1040, H = 300, m = {l:16,r:16,t:16,b:34}; svg.attr('viewBox',`0 0 ${W} ${H}`);
+  const xmax = Math.max(5.5, d3.max(S)*1.03), x = d3.scaleLinear([0,xmax],[m.l, W-m.r]);
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(8).tickSize(0).tickPadding(10).tickFormat(v => v===0?'0':`p=1e-${v}`)).call(g => g.select('.domain').attr('stroke',C.line)).selectAll('text').attr('fill',C.faint).attr('font-size',10.5);
+  const rng = d3.randomNormal.source(d3.randomLcg(3))(0,1);
+  const idx = d3.range(S.length).sort((a,b) => (NM[a]-NM[b]) || (LB[a]-LB[b]));
+  const pts = idx.map(i => ({i, s:S[i], nm:NM[i], lb:LB[i], jy:(H-m.b-m.t)/2 + m.t + Math.max(-1,Math.min(1,rng()/2.3))*(H-m.b-m.t)/2*.92}));
+  const shade = svg.append('rect').attr('y',m.t).attr('height',H-m.b-m.t).attr('fill','rgba(255,107,90,.07)');
+  const g = svg.append('g');
+  const dots = g.selectAll('circle').data(pts).join('circle').attr('cx',d => x(d.s)).attr('cy',d => d.jy).attr('r',d => d.lb ? 6 : d.nm ? 4 : 2.4)
+    .attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : '#3A414B').attr('opacity',d => d.lb ? 1 : d.nm ? .6 : .55).attr('stroke',d => d.lb ? C.bg : 'none').attr('stroke-width',1.5);
+  dots.filter(d => d.lb || d.nm).on('mousemove',(ev,d) => showTip(`${d.lb?'<b>Month with a court-named pitch</b>':'Clase/Ortiz, month not named'}<br><span class="k">alert score ${d.s.toFixed(2)} · p ≈ ${Math.pow(10,-d.s).toPrecision(1)}</span>`, ev)).on('mouseleave', hideTip);
+  if (!reduce){ dots.attr('cx', x(0)).transition().duration(900).delay(d => d.lb ? 500 : Math.random()*300).ease(EASE).attr('cx', d => x(d.s)); }
+  const line = svg.append('line').attr('y1',m.t-4).attr('y2',H-m.b).attr('stroke',C.red).attr('stroke-width',1.5);
+  const lbl = svg.append('text').attr('y',m.t+10).attr('fill',C.red).attr('font-size',12).attr('font-weight',600);
+  const thr = document.getElementById('thr');
+  function update(){
+    const t = +thr.value, flag = S.map(s => s >= t);
+    shade.attr('x',x(t)).attr('width',x(xmax)-x(t)); line.attr('x1',x(t)).attr('x2',x(t)); lbl.attr('x',x(t)+8).text('alert →');
+    document.getElementById('thr-p').textContent = Math.pow(10,-t).toPrecision(1);
+    const a = flag.filter(Boolean).length, n = flag.filter((f,i) => f && LB[i]).length, nTot = LB.filter(Boolean).length;
+    document.getElementById('lk-a').textContent = fmt(a); document.getElementById('lk-m').textContent = (a/nMonths).toFixed(1); document.getElementById('lk-n').textContent = `${n} / ${nTot}`;
+    dots.attr('opacity',d => d.lb ? 1 : d.nm ? .6 : (d.s >= t ? .95 : .4)).attr('fill',d => d.lb ? C.amber : d.nm ? C.muted : (d.s >= t ? '#8A5A54' : '#3A414B'));
+  }
+  thr.addEventListener('input', update); update();
+  const M = L.methods, lab = {score_audit:'Ours: jump above his own baseline', score_live:'Ours, live (earlier months only)', baseline_rate:'Simple: raw monthly rate', baseline_count:'Simple: raw monthly count'};
+  const best = Object.entries(M).reduce((a,b) => b[1].avg_precision > a[1].avg_precision ? b : a)[0];
+  const may = r => r['Emmanuel Clase 2025-05'];
+  document.getElementById('league-table').innerHTML = `<table><thead><tr><th>Method</th><th class="n">Avg precision</th><th class="n">Named months in top 1%</th><th class="n">Rank of Clase May '25</th><th class="n">Best named rank</th></tr></thead><tbody>` +
+    Object.entries(M).map(([k,v]) => `<tr class="${k.startsWith('score')?'ours':''} ${k===best?'best':''}"><td>${lab[k]}</td><td class="n">${v.avg_precision.toFixed(3)}</td><td class="n">${v.positives_in_top1pct} / ${L.n_positive_months}</td><td class="n">${may(v.positive_ranks)!=null?'#'+fmt(may(v.positive_ranks)):'–'}</td><td class="n">#${fmt(d3.min(Object.values(v.positive_ranks)))}</td></tr>`).join('') + `</tbody></table>`;
+  const a3 = L.alerts['score_audit>=3.0'];
+  document.getElementById('league-callout').innerHTML = `<b>The trade-off in one line:</b> at p ≤ 0.001 the monitor raises <b class="num">${a3.per_month_league_wide}</b> alerts a month across all of MLB (chance alone would give about <span class="num">${(a3.expected_by_chance_if_binomial/nMonths).toFixed(1)}</span>), and catches <b>${a3.flagged_named_cells} of ${L.n_positive_months}</b> named months. Small enough for one analyst to review, but it only sees a scheme while it is dense.`;
+})();
+</script>
+</body>
+</html>
