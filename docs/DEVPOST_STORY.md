@@ -37,6 +37,8 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
   - League-wide false alarms on all $8{,}339$ pitcher-months.
   - A 27-setting stress test, plus a beta-binomial null with over-dispersion $\rho = 0.0059$.
   - A label-free **detection limit**: plant $r$ rigged first pitches into every real pitcher-month and estimate $P(\text{alert} \mid r)$.
+  - A **threshold-free check**: average each pitcher-month's score over 11 dirt cut-offs, from 10% to 60% of a zone height below the zone, so that no hand-picked line drives the result.
+  - **Coach mode** (pre-registered at `4eb6f84` before any injury data was joined). Can the same engine warn a coach before an injury? We scored 7,070 pitcher-months on command drift plus fastball-velocity drop. A month counts as positive if an injured-list placement follows within 30 days; we pulled 5,337 IL transactions from the MLB StatsAPI, giving 1,088 positive months.
 - **Stack.** Python (pandas, NumPy, SciPy), a d3 story page inside Streamlit, a CLI (`python -m pim`), 11 tests on GitHub Actions CI, Docker, and model and data cards. **No LLM in the pipeline:** code computes, nothing guesses.
 - **Video.** Generated from code. The 3D pitch is rebuilt from its Statcast flight data, $\mathbf{x}(t) = \mathbf{x}_0 + \mathbf{v}_0 t + \tfrac{1}{2}\mathbf{a}t^2$; the music is synthesized and the photos are CC-licensed.
 
@@ -57,7 +59,7 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
 
 - **Our first model lost.** We kept the negative result on the front page and moved from single pitches to monthly patterns.
 - **Real pitchers are bursty.** We saw 27 alerts where a binomial null expects $4.4$. A beta-binomial null cuts the alerts to 3 and moves May 2025 up to #12, but its score ($2.55$) falls just short of the alert threshold. So we present a *ranked review list*, not an alarm.
-- **A second honest null.** Our coach-mode injury warning tied a one-line velocity rule ($\Delta	ext{AUC} = -0.005$, 95% CI $-0.020$ to $+0.009$), so we kept it out of the product.
+- **A second honest null.** Our coach-mode injury warning tied a one-line velocity rule ($\Delta\text{AUC} = -0.005$, 95% CI $-0.020$ to $+0.009$), so we kept it out of the product.
 - **Labels are allegations,** with $n = 18$ positives, so every interval is wide; we report them. One pitch number (Vavra) is ambiguous.
 - **Ethics.** Alerts are anonymised everywhere except for the two charged pitchers, and the CLI hides names by default.
 
