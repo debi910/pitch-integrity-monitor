@@ -1,5 +1,9 @@
 # Pitch Integrity Monitor
 
+[![tests](https://github.com/debi910/pitch-integrity-monitor/actions/workflows/tests.yml/badge.svg)](https://github.com/debi910/pitch-integrity-monitor/actions/workflows/tests.yml)
+
+**[Live app](https://pitch-integrity-monitor-uzwappgttfxqom7nyrx2nyk.streamlit.app/) · [9-slide deck (PDF)](docs/pitch-deck.pdf) · [Model card](docs/MODEL_CARD.md) · [Data card](docs/DATA_CARD.md) · [Changelog](CHANGELOG.md)**
+
 **Can public pitch-tracking data catch a rigged pitch?** We tested it on the 18 pitches federal prosecutors say
 Emmanuel Clase sold to bettors, and on every MLB pitcher-month from 2023 to 2025.
 
@@ -100,6 +104,12 @@ scripts/build_web.py ──► docs/index.html (story page, d3, photos inlined) 
 ```
 
 **Code computes, nothing guesses.** There is no LLM in the pipeline. Every number on screen comes from the scripts above.
+
+## Use it
+
+- **Integrity desk view:** the page's section 03 shows the case file the live monitor would have issued on June 1 2025 (pitch list, Savant game links, next steps, CSV export).
+- **Score any pitcher:** `python -m pim my_savant_export.csv --mode live --top 20 --out alerts.csv` (names hidden unless `--names`).
+- **Reproduce everything:** `make test`, `make evals`, `make app`, or `docker build -t pim . && docker run -p 8501:8501 pim`.
 
 ## Setup
 

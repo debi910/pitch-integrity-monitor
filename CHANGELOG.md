@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- Linked deck, model card, data card, CI badge and CLI usage from README and page footer.
 - Analyst case file (section 03): the alert the live monitor would have issued on June 1 2025, with the 9 dirt first pitches, filing tags, Savant game links, next steps, innocent explanations, CSV export.
 - Detection-limit analysis (`eval/power.py`): rigged first pitches injected into all 8,339 real pitcher-months. Reliever caught 50% at 6/month, starter at 9; 1–2/month is invisible (≤2.4%). New chart in section 04, README table, 9th test.
 - 2026-10-31: Post-hoc stress test (`eval/robustness.py`): 27 settings plus a beta-binomial null. Frozen #22 holds across volume floor and shrinkage, not across the dirt threshold; calibrated null gives 3 alerts (5.2 expected), Clase #12 but below the alert line. Shown on the page (06 Method) and in README. Tests: 4 → 8 (template rule, spike month, live mode, no other names).
