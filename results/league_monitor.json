@@ -1,0 +1,109 @@
+{
+  "files": [
+    "data/slim/statcast_2023.parquet",
+    "data/slim/statcast_2024.parquet",
+    "data/slim/statcast_2025.parquet"
+  ],
+  "n_pitches": 2175365,
+  "n_pitchers": 1068,
+  "n_pitcher_months": 8339,
+  "n_positive_months": 7,
+  "positive_months_scored": [
+    "Emmanuel Clase 2023-05",
+    "Emmanuel Clase 2023-06",
+    "Emmanuel Clase 2024-09",
+    "Emmanuel Clase 2024-10",
+    "Emmanuel Clase 2025-04",
+    "Emmanuel Clase 2025-05",
+    "Luis L. Ortiz 2025-06"
+  ],
+  "league_first_pitch_spike_rate": 0.058704964821095516,
+  "methods": {
+    "score_audit": {
+      "avg_precision": 0.007592772642278616,
+      "positive_ranks": {
+        "Emmanuel Clase 2023-05": 3271,
+        "Emmanuel Clase 2023-06": 1252,
+        "Emmanuel Clase 2024-09": 3039,
+        "Emmanuel Clase 2024-10": 2933,
+        "Emmanuel Clase 2025-04": 4711,
+        "Emmanuel Clase 2025-05": 22,
+        "Luis L. Ortiz 2025-06": 7321
+      },
+      "positives_in_top1pct": 1,
+      "cells_in_top1pct": 83
+    },
+    "score_live": {
+      "avg_precision": 0.007197839317338741,
+      "positive_ranks": {
+        "Emmanuel Clase 2023-05": 3078,
+        "Emmanuel Clase 2023-06": 1308,
+        "Emmanuel Clase 2024-09": 2330,
+        "Emmanuel Clase 2024-10": 2305,
+        "Emmanuel Clase 2025-04": 3780,
+        "Emmanuel Clase 2025-05": 24,
+        "Luis L. Ortiz 2025-06": 7298
+      },
+      "positives_in_top1pct": 1,
+      "cells_in_top1pct": 83
+    },
+    "baseline_rate": {
+      "avg_precision": 0.005689132296062871,
+      "positive_ranks": {
+        "Emmanuel Clase 2023-05": 2687,
+        "Emmanuel Clase 2023-06": 945,
+        "Emmanuel Clase 2024-09": 2345,
+        "Emmanuel Clase 2024-10": 2248,
+        "Emmanuel Clase 2025-04": 3760,
+        "Emmanuel Clase 2025-05": 31,
+        "Luis L. Ortiz 2025-06": 6448
+      },
+      "positives_in_top1pct": 1,
+      "cells_in_top1pct": 84
+    },
+    "baseline_count": {
+      "avg_precision": 0.0012255291186607361,
+      "positive_ranks": {
+        "Emmanuel Clase 2023-05": 2984,
+        "Emmanuel Clase 2023-06": 2410,
+        "Emmanuel Clase 2024-09": 4246,
+        "Emmanuel Clase 2024-10": 4263,
+        "Emmanuel Clase 2025-04": 3848,
+        "Emmanuel Clase 2025-05": 783,
+        "Luis L. Ortiz 2025-06": 3514
+      },
+      "positives_in_top1pct": 0,
+      "cells_in_top1pct": 85
+    }
+  },
+  "alerts": {
+    "score_audit>=2.0": {
+      "flagged_cells": 147,
+      "flagged_named_cells": 1,
+      "flagged_other_cells": 146,
+      "per_month_league_wide": 5.88,
+      "expected_by_chance_if_binomial": 47.9
+    },
+    "score_live>=2.0": {
+      "flagged_cells": 163,
+      "flagged_named_cells": 1,
+      "flagged_other_cells": 162,
+      "per_month_league_wide": 6.52,
+      "expected_by_chance_if_binomial": 48.6
+    },
+    "score_audit>=3.0": {
+      "flagged_cells": 27,
+      "flagged_named_cells": 1,
+      "flagged_other_cells": 26,
+      "per_month_league_wide": 1.08,
+      "expected_by_chance_if_binomial": 4.4
+    },
+    "score_live>=3.0": {
+      "flagged_cells": 41,
+      "flagged_named_cells": 1,
+      "flagged_other_cells": 40,
+      "per_month_league_wide": 1.64,
+      "expected_by_chance_if_binomial": 4.5
+    }
+  }
+}

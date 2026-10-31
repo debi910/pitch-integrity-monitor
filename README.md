@@ -7,17 +7,41 @@ Emmanuel Clase sold to bettors, and on every MLB pitcher-month from 2023 to 2025
 > Emmanuel Clase and Luis L. Ortiz have pleaded not guilty and the trial is set for November 2026. This project
 > measures how *unusual* pitches are for a pitcher. Unusual is not proof of anything.
 
-Live app: _link added after deploy_ · AQX Sports Analytics Data Bowl 4.0
+Live app: https://pitch-integrity-monitor-uzwappgttfxqom7nyrx2nyk.streamlit.app/ · AQX Sports Analytics Data Bowl 4.0
 
 ## The answer in two results
 
-<!-- RESULTS_TABLE -->
+**Result 1 — single pitches** (all 2,972 Clase pitches 2023–25, 18 named; `results/within_clase.json`)
+
+| Method | Avg precision (95% CI) | Named in top 18 | Named in top 100 | Median rank |
+|---|---|---|---|---|
+| PIM (ours) | 0.097 (0.02–0.29) | 2 | 4 | 350 |
+| B1 spiked-ball rule | 0.200 (0.06–0.41) | 5 | 10 | 93 |
+| B2 distance outside zone | 0.184 (0.04–0.40) | 4 | 7 | 173 |
+| B3 random | 0.005 (0.00–0.01) | 0 | 0 | 1,490 |
+
+**Result 2 — monthly pattern, league-wide** (2,175,365 pitches, 1,068 pitchers, 8,339 pitcher-months; `results/league_monitor.json`)
+
+| Method | Avg precision | Rank of Clase May 2025 | Named months in top 1% |
+|---|---|---|---|
+| **Ours: jump above his own baseline** | 0.0076 | **#22** | 1 / 7 |
+| Ours, live (earlier months only) | 0.0072 | #24 | 1 / 7 |
+| Simple: raw monthly rate | 0.0057 | #31 | 1 / 7 |
+| Simple: raw monthly count | 0.0012 | #783 | 0 / 7 |
+
+At p ≤ 0.001 the monitor raises **27 alerts in 3 seasons (1.08 a month across MLB)**; a pure binomial
+null would give 4.4, so real pitchers are burstier than the model assumes. It catches **1 of 7** named months
+(Clase, May 2025: 9 of 41 first pitches in the dirt vs his 6.1% baseline). The live version would have flagged it on
+June 1 2025, about a month before he was placed on leave. It is silent on 2023 and on Ortiz.
+
 
 1. **One pitch is not enough.** Our pre-registered pitch-level model (frozen in git at `5fa3b3e` before we looked
    at label ranks) ranked the 18 named pitches *worse* than a one-line "spiked ball" rule. A third of the named
    pitches were not balls at all, so no location rule could see them.
-2. **Patterns show up.** A monitor that watches each pitcher's *own* monthly rate of the pattern described in the
-   indictment (first pitch of an at-bat, taken for a ball, in the dirt) is tested league-wide below.
+2. **Patterns show up, sometimes.** A monitor that watches each pitcher's *own* monthly rate of the pattern described in
+   the indictment (first pitch of an at-bat, taken for a ball, in the dirt) ranks Clase's May 2025 #22 of 8,339
+   pitcher-months, ahead of the raw-rate and raw-count rules, at about one alert a month league-wide. It misses the
+   other six named months, where the rigged pitches were too sparse to move a monthly rate.
 
 ## Why it matters
 
@@ -43,7 +67,7 @@ eval/within_pitcher.py   Eval 1: rank of named pitches among all Clase pitches v
 eval/league_monitor.py   Eval 2: rank of named months among all pitcher-months; alert volume
         │
         ▼
-app.py (Streamlit)       case view · result 1 · result 2 · upload any pitcher · method & limits
+scripts/build_web.py ──► docs/index.html (story page, d3, photos inlined) ──► app.py (Streamlit host)
 ```
 
 **Code computes, nothing guesses.** There is no LLM in the pipeline. Every number on screen comes from the scripts above.
@@ -81,6 +105,8 @@ Nothing is simulated or mocked.
   matched them. The league-wide test is the honest check, since it is dominated by pitchers the template never saw.
 - No 2022 data, so early-2023 baselines lean on the league prior.
 - Ortiz's two pitches are known only at game level.
+- The Vavra label is reported as pitch 2 of the at-bat; pitch 1 (a 0-0 slider just below the zone) fits the pattern better. We kept the label as reported.
+- Photos: CC-licensed from Wikimedia Commons, credited in `web/img/CREDITS.md` and on the page.
 
 ## Repo map
 

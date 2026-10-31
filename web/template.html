@@ -355,6 +355,8 @@ onFirstView(document.querySelector('.stats'), () => {
   document.querySelectorAll('[data-count]').forEach(el => countUp(el, +el.dataset.count));
   countUp(document.getElementById('stat-pitches'), L ? L.n_pitches : DATA.pitches.length);
   if (L){ const a = L.alerts['score_audit>=3.0']; countUp(document.getElementById('stat-alerts'), a.per_month_league_wide, 1); }
+  if (L){ const r = L.methods.score_audit.positive_ranks['Emmanuel Clase 2025-05'];
+    document.getElementById('verdict-yes').textContent = `Clase's May 2025 ranked #${r} of ${fmt(L.n_pitcher_months)} MLB pitcher-months against his own baseline. But only 1 of 7 named months stood out.`; }
   else { document.getElementById('stat-alerts-l').textContent = 'league-wide alert rate: test still running'; }
   if (!L) document.querySelector('.stats .stat:nth-child(3) .l').textContent = 'Clase pitches scanned (league-wide pull still running)';
 });

@@ -14,3 +14,4 @@
 - UI rebuild: animated story page (`web/template.html` -> `docs/index.html` via `scripts/build_web.py`, d3 v7.9.0 inlined), embedded in Streamlit; upload tab kept.
 - Full-league pull complete: 2023 = 732,562 pitches (2,471 games), 2024 = 724,767 (2,472), 2025 = 726,773 (2,477), regular season + postseason. Slim zstd copies in `data/slim/statcast_{year}.parquet` (16.8 / 17.3 / 17.4 MB). Clase counts in league data match the per-pitcher pull (1,133 / 1,115 / 754).
 - Added CC-licensed Wikimedia Commons photos in `web/img/` with `CREDITS.md`.
+- League eval run on 2,175,365 pitches (frozen code, no changes): Clase May 2025 ranks #22 of 8,339 pitcher-months; 27 alerts at p<=0.001 (1.08/month); 1 of 7 named months caught. Results baked into page and README.
