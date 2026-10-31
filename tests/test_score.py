@@ -82,3 +82,10 @@ def test_monitor_names_no_other_pitchers():
         return
     cells = pd.read_csv("results/league_cells_anon.csv")
     assert "pitcher" not in cells.columns and "player_name" not in cells.columns
+
+
+def test_power_grows_with_rigged_pitches_and_zero_is_rare():
+    from eval.power import detect
+    n, k, b = np.array([40, 40, 110]), np.array([2, 3, 7]), np.array([.06, .07, .06])
+    hits = [detect(n, k, b, r).sum() for r in range(16)]
+    assert hits == sorted(hits) and hits[0] == 0 and hits[-1] == 3

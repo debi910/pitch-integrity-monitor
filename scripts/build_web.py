@@ -95,6 +95,8 @@ def main():
     else:
         out["cells"] = None
 
+    pw = ROOT / "results/power.json"
+    out["power"] = json.loads(pw.read_text()) if pw.exists() else None
     rob = ROOT / "results/robustness.json"
     out["robust"] = json.loads(rob.read_text()) if rob.exists() else None
 

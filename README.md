@@ -48,6 +48,22 @@ setting. Replacing the binomial with a **beta-binomial null** (fitted to the lea
 ρ = 0.0059) cuts alerts from 27 to **3** (5.2 expected by chance) and moves Clase May 2025 up to **#12**, but its score
 (2.55) then falls just short of p ≤ 0.001. Read the monitor as a ranked review list, not an alarm.
 
+**Detection limit** (post-hoc, label-free; `eval/power.py` → `results/power.json`). We swapped *r* rigged first pitches
+(taken ball in the dirt) into every real pitcher-month and asked whether the frozen monitor would alert:
+
+| Rigged first pitches in a month | Reliever caught (n 20–59) | Starter caught (n 60+) |
+|---|---|---|
+| 1 | 0.7% | 0.9% |
+| 2 | 2.4% | 2.0% |
+| 4 | 14% | 7% |
+| **6** | **52%** | 19% |
+| 9 | 95% | **53%** |
+
+A fixer who sells one or two pitches a month is invisible in public pitch data; the named months held 1 to 6 named
+pitches each, which is why the monitor caught only one. Past about six a month the pattern gives itself away. Under the
+stricter beta-binomial alarm a reliever needs 7 (50%) to 10 (90%). Performance data alone cannot stop small fixes, but it
+caps how greedy a fixer can be and tells an integrity desk when to pull betting records.
+
 1. **One pitch is not enough.** Our pre-registered pitch-level model (frozen in git at `5fa3b3e` before we looked
    at label ranks) ranked the 18 named pitches *worse* than a one-line "spiked ball" rule. A third of the named
    pitches were not balls at all, so no location rule could see them.
@@ -91,7 +107,7 @@ scripts/build_web.py ──► docs/index.html (story page, d3, photos inlined) 
 pip install -r requirements.txt          # app + evals
 streamlit run app.py                      # the app (works with the committed slim data)
 pip install -r requirements-pipeline.txt && python scripts/pull_statcast.py && python scripts/make_slim.py 2023 2024 2025
-python eval/within_pitcher.py && python eval/league_monitor.py && python eval/robustness.py && pytest -q
+python eval/within_pitcher.py && python eval/league_monitor.py && python eval/robustness.py && python eval/power.py && pytest -q
 ```
 
 ## Data

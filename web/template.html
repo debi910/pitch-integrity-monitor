@@ -177,6 +177,7 @@ svg text{font-family:var(--sans)}
 .robust{display:flex;gap:28px;flex-wrap:wrap;margin-top:14px}.robust .g{display:grid;grid-template-columns:auto repeat(3,52px);gap:4px;font-size:12px;align-items:center}
 .robust .g b{grid-column:1/-1;font-size:13px;margin-bottom:4px}.robust .c{height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-weight:600}
 .robust .c.f{outline:2px solid #16181C;outline-offset:1px}.robust .h{color:#5E636B;text-align:center}
+.pw-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:32px;align-items:start;margin-top:20px}@media (max-width:760px){.pw-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -277,6 +278,15 @@ svg text{font-family:var(--sans)}
   <h2 class="reveal">How many innocent pitchers does it flag?</h2>
   <p class="lede reveal">An alarm is only useful if an integrity desk can afford to check it. Each dot is one pitcher-month in MLB from 2023 to 2025. Further right means a bigger jump above that pitcher's own baseline. <b>Drag the threshold</b> to see the trade-off. Other pitchers are never named.</p>
   <div id="league-body" class="reveal"></div>
+  <div id="power" class="reveal" style="margin-top:56px">
+    <h3 style="font-family:var(--serif,inherit);font-size:30px;font-weight:400;margin:0 0 8px">How big does a fix have to be before the data can see it?</h3>
+    <p class="lede" style="margin-top:0">We took every real pitcher-month in MLB and quietly swapped in <b>r</b> rigged first pitches, then asked the frozen monitor if it would alert. No allegations needed: this is the detection limit of public pitch data.</p>
+    <div class="pw-grid">
+      <div><svg id="power-svg" style="width:100%;height:auto;display:block"></svg>
+        <div id="power-legend" style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:6px"></div></div>
+      <div id="power-kpis"></div>
+    </div>
+  </div>
 </div></section>
 
 <section id="tryit"><div class="wrap">
@@ -720,6 +730,36 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   const S = R.summary, B = R.beta_binomial;
   document.getElementById('robustNote').innerHTML = `Volume floor and shrinkage barely matter (#22–#26 at the 30% threshold). <b>The dirt threshold does</b>: at 20% or 40% the month falls to #76–#168. Alerts stay at ${S.alerts_range[0]}–${S.alerts_range[1]} across all 27. ` +
     `A null that allows normal month-to-month wobble (beta-binomial, ρ=${B.rho.toFixed(4)}) cuts alerts from 27 to <b>${B.alerts}</b> (${B.expected_alerts_under_null} expected by chance) and moves Clase up to <b>#${B.rank_clase_2025_05}</b>, but his month then scores ${B.score_clase_2025_05}, just short of the alert line. So it is a ranked review list, not an alarm.`;
+})();
+
+/* ---------- detection power ---------- */
+(function(){ const P = DATA.power, root = document.getElementById('power'); if (!P) { root && root.remove(); return; }
+  const G = P.groups, L = G[Object.keys(G).find(k => k.startsWith('light'))], H = G[Object.keys(G).find(k => k.startsWith('heavy'))];
+  const W = 680, Ht = 360, m = {t:16, r:16, b:44, l:46};
+  const svg = d3.select('#power-svg').attr('viewBox', `0 0 ${W} ${Ht}`);
+  const x = d3.scaleLinear().domain([0, 15]).range([m.l, W-m.r]), y = d3.scaleLinear().domain([0, 1]).range([Ht-m.b, m.t]);
+  svg.append('rect').attr('x', x(1)).attr('width', x(6)-x(1)).attr('y', m.t).attr('height', Ht-m.b-m.t).attr('fill', C.amber).attr('opacity', .09);
+  svg.append('text').attr('x', (x(1)+x(6))/2).attr('y', m.t+16).attr('text-anchor','middle').attr('font-size',11.5).attr('fill',C.amber).attr('font-weight',600).text('Named months had 1–6 named pitches');
+  svg.append('g').attr('transform', `translate(0,${Ht-m.b})`).call(d3.axisBottom(x).ticks(15).tickSizeOuter(0)).call(g => g.selectAll('text').attr('fill', C.muted)).call(g => g.selectAll('line,path').attr('stroke', C.line));
+  svg.append('g').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.0%')).tickSize(-(W-m.l-m.r))).call(g => g.select('.domain').remove()).call(g => g.selectAll('line').attr('stroke', C.line)).call(g => g.selectAll('text').attr('fill', C.muted));
+  svg.append('text').attr('x', (m.l+W-m.r)/2).attr('y', Ht-8).attr('text-anchor','middle').attr('font-size',12).attr('fill',C.muted).text('Rigged first pitches thrown in one month');
+  svg.append('line').attr('x1', m.l).attr('x2', W-m.r).attr('y1', y(.5)).attr('y2', y(.5)).attr('stroke', C.ink).attr('stroke-dasharray','2 4').attr('opacity',.4);
+  const series = [{d:L.binomial, c:C.red, dash:null, lab:'Relievers, frozen alarm'}, {d:H.binomial, c:C.ink, dash:null, lab:'Starters, frozen alarm'},
+                  {d:L.beta_binomial, c:C.red, dash:'5 5', lab:'Relievers, strict alarm'}, {d:H.beta_binomial, c:C.ink, dash:'5 5', lab:'Starters, strict alarm'}];
+  const line = d3.line().x((v,i) => x(P.r[i])).y(v => y(v)).curve(d3.curveMonotoneX);
+  const paths = series.map(s => svg.append('path').attr('d', line(s.d)).attr('fill','none').attr('stroke', s.c).attr('stroke-width', 2.5).attr('stroke-dasharray', s.dash).attr('opacity', s.dash ? .75 : 1));
+  document.getElementById('power-legend').innerHTML = series.map(s => `<span style="display:inline-flex;align-items:center;gap:6px"><svg width="22" height="6"><line x1="0" x2="22" y1="3" y2="3" stroke="${s.c}" stroke-width="2.5" ${s.dash?`stroke-dasharray="${s.dash}"`:''}/></svg>${s.lab}</span>`).join('');
+  const pct = v => Math.round(v*100)+'%';
+  document.getElementById('power-kpis').innerHTML = `
+    <div class="kpi" style="margin-bottom:18px"><div style="font-size:44px;font-family:var(--serif,inherit);color:${C.red};line-height:1">${L.r50_binomial}</div><div style="font-size:14px;color:${C.muted}">rigged first pitches in a month before a <b>reliever</b> is caught half the time (${L.r90_binomial} for 90%)</div></div>
+    <div class="kpi" style="margin-bottom:18px"><div style="font-size:44px;font-family:var(--serif,inherit);line-height:1">${H.r50_binomial}</div><div style="font-size:14px;color:${C.muted}">for a <b>starter</b>, who hides them among ~${H.median_n} batters a month</div></div>
+    <div class="kpi"><div style="font-size:44px;font-family:var(--serif,inherit);color:${C.amber};line-height:1">${pct(L.binomial[2])}</div><div style="font-size:14px;color:${C.muted}">chance a reliever selling <b>2 pitches a month</b> is ever flagged in that month</div></div>`;
+  const reveal = () => paths.forEach((p,i) => { const len = p.node().getTotalLength(); const dash = series[i].dash;
+    if (reduce) return; p.attr('stroke-dasharray', `${len} ${len}`).attr('stroke-dashoffset', len).transition().delay(i*120).duration(1100).ease(EASE).attr('stroke-dashoffset', 0).on('end', () => p.attr('stroke-dasharray', dash)); });
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { reveal(); o.disconnect(); } }, {threshold:.3}).observe(root);
+  const cal = document.createElement('div'); cal.className = 'callout'; cal.style.marginTop = '24px';
+  cal.innerHTML = `<b>What this means:</b> a fixer who sells one or two pitches a month is invisible in public pitch data (${pct(L.binomial[1])}–${pct(L.binomial[2])} caught), and the named months each held only 1 to 6 named pitches. Past about ${L.r50_binomial} a month the pattern gives itself away. So performance data alone can't stop small fixes, but it caps how greedy a fixer can get, and it tells integrity desks when to pull betting records. The two sources together are the defence.`;
+  root.appendChild(cal);
 })();
 </script>
 </body>
