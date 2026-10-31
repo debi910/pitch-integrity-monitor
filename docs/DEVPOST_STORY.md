@@ -39,7 +39,7 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
   - A label-free **detection limit**: plant $r$ rigged first pitches into every real pitcher-month and estimate $P(\text{alert} \mid r)$.
   - A **threshold-free check**: average each pitcher-month's score over 11 dirt cut-offs, from 10% to 60% of a zone height below the zone, so that no hand-picked line drives the result.
   - **Coach mode** (pre-registered at `4eb6f84` before any injury data was joined). Can the same engine warn a coach before an injury? We scored 7,070 pitcher-months on command drift plus fastball-velocity drop. A month counts as positive if an injured-list placement follows within 30 days; we pulled 5,337 IL transactions from the MLB StatsAPI, giving 1,088 positive months.
-- **Stack.** Python (pandas, NumPy, SciPy), a d3 story page inside Streamlit, a CLI (`python -m pim`), 11 tests on GitHub Actions CI, Docker, and model and data cards. **No LLM in the pipeline:** code computes, nothing guesses.
+- **Stack.** Python (pandas, NumPy, SciPy), a d3 story page inside Streamlit, a CLI (`python -m pim`), 12 tests on GitHub Actions CI, Docker, and model and data cards. **No LLM in the pipeline:** code computes, nothing guesses.
 - **Video.** Generated from code. The 3D pitch is rebuilt from its Statcast flight data, $\mathbf{x}(t) = \mathbf{x}_0 + \mathbf{v}_0 t + \tfrac{1}{2}\mathbf{a}t^2$; the music is synthesized and the photos are CC-licensed.
 
 ## Results
