@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- Analyst case file (section 03): the alert the live monitor would have issued on June 1 2025, with the 9 dirt first pitches, filing tags, Savant game links, next steps, innocent explanations, CSV export.
 - Detection-limit analysis (`eval/power.py`): rigged first pitches injected into all 8,339 real pitcher-months. Reliever caught 50% at 6/month, starter at 9; 1–2/month is invisible (≤2.4%). New chart in section 04, README table, 9th test.
 - 2026-10-31: Post-hoc stress test (`eval/robustness.py`): 27 settings plus a beta-binomial null. Frozen #22 holds across volume floor and shrinkage, not across the dirt threshold; calibrated null gives 3 alerts (5.2 expected), Clase #12 but below the alert line. Shown on the page (06 Method) and in README. Tests: 4 → 8 (template rule, spike month, live mode, no other names).
 - Project setup: Python 3.13.3 venv, pinned requirements (pybaseball 2.2.7, pandas 3.1.0, pyarrow 26.0.0, numpy 2.5.4, scikit-learn 1.9.1, streamlit 1.66.1, plotly 7.1.0), `.gitignore` (raw data excluded).

@@ -12,7 +12,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from pim.monitor import monthly  # noqa: E402
+from pim.monitor import monthly, template_events  # noqa: E402
 from pim.score import baseline_spiked_ball, prepare, score  # noqa: E402
 
 CLASE, ORTIZ = 661403, 682847
@@ -95,6 +95,19 @@ def main():
     else:
         out["cells"] = None
 
+    # The case file an integrity desk would have opened when the LIVE monitor fired (data through May 31 2025)
+    ev = template_events(prepare(d[d["pitcher"] == CLASE]))
+    ev = ev[(ev["month"] == "2025-05") & (ev["event"] == 1)].merge(lab, on=KEY, how="left")
+    cm = next(x for x in out["months"] if x["p"] == "Emmanuel Clase" and x["m"] == "2025-05")
+    out["case"] = {"month": "2025-05", "issued": "2025-06-01", "n": cm["n"], "k": cm["k"], "score_live": cm["sl"],
+                   "events": [{"d": e.game_date.strftime("%Y-%m-%d"), "g": int(e.game_pk), "inn": int(e.inning),
+                               "t": e.pitch_type, "v": r(e.release_speed, 1), "z": r(e.z_rel, 2),
+                               "res": e.description, "lead": int(e.fld_score - e.bat_score),
+                               "opp": e.away_team if e.inning_topbot == "Top" else e.home_team,
+                               "named": int(pd.notna(e.label_id))} for e in ev.itertuples()]}
+    live = pd.read_csv(ROOT / "results/league_cells_anon.csv") if (ROOT / "results/league_cells_anon.csv").exists() else None
+    if live is not None and "score_live" in live:
+        out["case"]["same_day_alerts"] = int(((live["month"] == "2025-05") & (live["score_live"] >= 3)).sum())
     pw = ROOT / "results/power.json"
     out["power"] = json.loads(pw.read_text()) if pw.exists() else None
     rob = ROOT / "results/robustness.json"

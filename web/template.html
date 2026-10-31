@@ -178,6 +178,16 @@ svg text{font-family:var(--sans)}
 .robust .g b{grid-column:1/-1;font-size:13px;margin-bottom:4px}.robust .c{height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-weight:600}
 .robust .c.f{outline:2px solid #16181C;outline-offset:1px}.robust .h{color:#5E636B;text-align:center}
 .pw-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:32px;align-items:start;margin-top:20px}@media (max-width:760px){.pw-grid{grid-template-columns:1fr}}
+.case{margin-top:48px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(22,24,28,.04),0 12px 32px -16px rgba(22,24,28,.18)}
+.case .bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:14px 22px;background:#16181C;color:#F7F4EE;font:500 12px/1.4 var(--mono,ui-monospace,monospace);letter-spacing:.04em}
+.case .bar .dot{width:8px;height:8px;border-radius:50%;background:#C8322B;box-shadow:0 0 0 4px rgba(200,50,43,.25)}
+.case .bar .sp{flex:1}.case .bar button{font:inherit;color:#16181C;background:#F7F4EE;border:0;border-radius:8px;padding:6px 12px;cursor:pointer;transition:transform .16s cubic-bezier(.23,1,.32,1)}.case .bar button:active{transform:scale(.97)}
+.case .body{padding:22px}.case h3{margin:0 0 4px;font-size:22px;font-weight:600}.case .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.case .kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}.case .kp div{border:1px solid var(--line);border-radius:10px;padding:10px 12px}.case .kp b{display:block;font-size:22px;font-variant-numeric:tabular-nums}.case .kp span{font-size:12px;color:var(--muted)}
+.case .tw{overflow-x:auto}.case table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;min-width:640px}.case th{text-align:left;font-weight:500;color:var(--muted);border-bottom:1px solid var(--line);padding:6px 8px}.case td{border-bottom:1px solid var(--line);padding:8px}
+.case .tag{font-size:11px;font-weight:600;color:#fff;background:#D9860B;border-radius:999px;padding:2px 8px}.case a{color:inherit}
+.case .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}.case .cols h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.case .cols ol,.case .cols ul{margin:0;padding-left:18px;font-size:14px;line-height:1.6}
+@media (max-width:760px){.case .kp{grid-template-columns:1fr 1fr}.case .cols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -271,6 +281,7 @@ svg text{font-family:var(--sans)}
     <div class="legend"><span><i class="sw" style="background:var(--amber)"></i>month containing a court-named pitch</span><span><i class="sw" style="background:#CFC8BB"></i>other months</span><span><i class="sw" style="background:var(--teal);height:2px;width:14px"></i>his own baseline</span><span><i class="sw" style="background:var(--red);border-radius:50%"></i>alert (p ≤ 0.001)</span></div>
   </div>
   <div class="callout reveal" id="pattern-callout"></div>
+  <div id="case" class="case reveal"></div>
 </div></section>
 
 <section id="league"><div class="wrap">
@@ -760,6 +771,27 @@ const tname = t => ({SL:'Slider', FC:'Cutter', SI:'Sinker', FF:'Four-seamer'}[t]
   const cal = document.createElement('div'); cal.className = 'callout'; cal.style.marginTop = '24px';
   cal.innerHTML = `<b>What this means:</b> a fixer who sells one or two pitches a month is invisible in public pitch data (${pct(L.binomial[1])}–${pct(L.binomial[2])} caught), and the named months each held only 1 to 6 named pitches. Past about ${L.r50_binomial} a month the pattern gives itself away. So performance data alone can't stop small fixes, but it caps how greedy a fixer can get, and it tells integrity desks when to pull betting records. The two sources together are the defence.`;
   root.appendChild(cal);
+})();
+
+/* ---------- analyst case file ---------- */
+(function(){ const K = DATA.case, el = document.getElementById('case'); if (!K) { el && el.remove(); return; }
+  const named = K.events.filter(e => e.named).length, fmtD = d3.timeFormat('%b %-d'), P = d3.timeParse('%Y-%m-%d');
+  const resTxt = r => r === 'blocked_ball' ? 'ball, blocked' : r;
+  el.innerHTML = `<div class="bar"><span class="dot"></span><span>ALERT · PIM-2025-06-01-001</span><span>LIVE MODE · DATA THROUGH MAY 31</span><span class="sp"></span><button id="case-dl">Export case (CSV)</button></div>
+  <div class="body"><h3>What an integrity desk would have opened on June 1, 2025</h3>
+  <p class="sub">The live monitor only sees earlier months, so this alert was available on the first morning after May closed, about a month before the leave. It is a review request, not a finding.${K.same_day_alerts != null ? ` That morning it raised ${K.same_day_alerts} alert${K.same_day_alerts===1?'':'s'} across all of MLB.` : ''}</p>
+  <div class="kp"><div><b>${K.k} of ${K.n}</b><span>first pitches taken in the dirt</span></div><div><b>${Math.round(K.k/K.n*100)}%</b><span>vs his ~6% normal</span></div>
+    <div><b>${K.score_live.toFixed(1)}</b><span>score (−log₁₀ p), alert ≥ 3</span></div><div><b>${named} of ${K.k}</b><span>later named in the filing</span></div></div>
+  <div class="tw"><table><thead><tr><th>Date</th><th>Opp</th><th>Inn</th><th>Lead</th><th>Pitch</th><th>mph</th><th>Below zone</th><th>Result</th><th>Filing</th><th>Game</th></tr></thead><tbody>
+  ${K.events.map(e => `<tr><td>${fmtD(P(e.d))}</td><td>${e.opp}</td><td>${e.inn}</td><td>${e.lead>0?'+':''}${e.lead}</td><td>${e.t}</td><td>${e.v}</td><td>${Math.round(-e.z*100)}%</td><td>${resTxt(e.res)}</td><td>${e.named?'<span class="tag">named</span>':''}</td><td><a href="https://baseballsavant.mlb.com/gamefeed?gamePk=${e.g}" target="_blank" rel="noopener">Savant ↗</a></td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="cols"><div><h4>Analyst next steps</h4><ol><li>Watch the ${K.k} pitches (Savant links above).</li><li>Pull prop-market volume for these games from betting-integrity partners.</li><li>Compare with his pitch-level history: grip change, new pitch, mechanics.</li><li>Escalate only if betting data and video both agree.</li></ol></div>
+  <div><h4>Innocent explanations to rule out</h4><ul><li>Injury or fatigue (check the IL and velocity trend).</li><li>A deliberate new approach: burying first-pitch sliders.</li><li>Catcher, umpire or park effects that month.</li><li>Small sample: ${K.n} batters is one reliever-month.</li></ul></div></div></div>`;
+  document.getElementById('case-dl').addEventListener('click', () => {
+    const rows = [['date','game_pk','opponent','inning','lead','pitch_type','mph','pct_zone_height_below','result','named_in_filing','savant_url']].concat(
+      K.events.map(e => [e.d, e.g, e.opp, e.inn, e.lead, e.t, e.v, Math.round(-e.z*100), e.res, e.named, `https://baseballsavant.mlb.com/gamefeed?gamePk=${e.g}`]));
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([rows.map(r => r.join(',')).join('\n')], {type:'text/csv'}));
+    a.download = 'PIM-2025-06-01-001.csv'; a.click(); });
 })();
 </script>
 </body>
