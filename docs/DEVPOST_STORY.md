@@ -30,7 +30,7 @@ For Clase in May 2025: $k = 9$, $n = 41$, and $\hat{\pi} = 0.061$, so $k/n = 0.2
 
 ## How we built it
 
-- **Data.** Every regular-season and postseason pitch from 2023 to 2025 from Baseball Savant via `pybaseball`, pulled politely in monthly chunks ($2{,}184{,}102$ pitches). We matched the 18 court-named pitches one-to-one to Statcast rows by date, inning, batter and pitch number: **18 of 18 matched, 0 ambiguous**.
+- **Data.** Every regular-season and postseason pitch from 2023 to 2025 from Baseball Savant via `pybaseball`, pulled politely in monthly chunks ($2{,}184{,}102$ pitches). We matched the 18 court-named pitches one-to-one to Statcast rows by date, inning, batter and pitch number: **18 of 18 matched** (one, Vavra, is reported as pitch 2 where pitch 1 fits better; we kept it as reported).
 - **Pre-registration.** Both models were frozen in git *before* evaluation (`5fa3b3e`, `674637e`) and compared with simple baselines.
 - **Evaluation.**
   - Within-pitcher ranking of the 18 named pitches among all $2{,}972$ Clase pitches, by average precision $\text{AP} = \sum_k (R_k - R_{k-1})\,P_k$.
