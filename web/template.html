@@ -138,6 +138,8 @@ td.n{font-variant-numeric:tabular-nums;text-align:right} th.n{text-align:right}
 tr.ours td{color:var(--ink)} tr.best td:first-child:after{content:"  best";color:var(--teal);font:500 11px var(--mono)}
 footer{padding:48px 0 80px;color:var(--faint);font-size:13px}
 /* try it */
+.ballimg{width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow);transition:transform .5s var(--ease-out)}
+.drop:hover .ballimg{transform:rotate(-25deg)}
 .drop{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;border:1.5px dashed #CFC8BB;border-radius:16px;padding:34px 20px;background:var(--surface);cursor:pointer;transition:border-color .2s ease,background-color .2s ease,transform .16s var(--ease-out)}
 .drop:hover,.drop.over{border-color:var(--red);background:#FFFDFA}
 .drop:active{transform:scale(.99)}
@@ -149,7 +151,7 @@ footer{padding:48px 0 80px;color:var(--faint);font-size:13px}
 .empty{color:var(--faint);text-align:center;padding:80px 0}
 /* photos */
 .banner{margin:56px 0 0;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
-.banner img{display:block;width:100%;height:clamp(220px,34vw,420px);object-fit:cover;transform:scale(1.04);transition:transform 1.6s var(--ease-out)}
+.banner img{display:block;width:100%;height:clamp(220px,30vw,380px);object-fit:cover;object-position:center 88%;transform:scale(1.04);transition:transform 1.6s var(--ease-out)}
 .banner.in img{transform:none}
 .banner figcaption{position:absolute;inset:auto 0 0 0;padding:28px 24px 18px;background:linear-gradient(180deg,transparent,rgba(10,12,14,.72));color:#fff;display:flex;justify-content:space-between;gap:16px;align-items:flex-end;font:400 clamp(18px,2.2vw,26px)/1.2 var(--serif)}
 .banner small,.interlude small{font:400 10.5px var(--sans);opacity:.75;display:block;max-width:40ch;text-align:right}
@@ -269,7 +271,7 @@ svg text{font-family:var(--sans)}
   <div class="grid2" style="grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)">
     <div class="reveal">
       <label class="drop" id="drop"><input type="file" id="file" accept=".csv" hidden>
-        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="#fff" stroke="#D5CFC4"/><path d="M12,6 Q19,20 12,34 M28,6 Q21,20 28,34" fill="none" stroke="#C8322B" stroke-width="1.8" stroke-dasharray="2 2"/></svg>
+        <!--IMG:ball--><img src="__IMG_ball__" alt="" class="ballimg"><!--/IMG:ball-->
         <b>Drop a Savant CSV</b><span>or click to choose a file</span></label>
       <div class="or">or try a sample</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-sample="Emmanuel Clase">Emmanuel Clase</button><button class="btn" data-sample="Luis L. Ortiz">Luis L. Ortiz</button></div>
@@ -307,7 +309,7 @@ svg text{font-family:var(--sans)}
   </div>
 </div></section>
 
-<footer><div class="wrap">Pitch Integrity Monitor · AQX Sports Analytics Data Bowl 4.0 · Code: <a href="https://github.com/debi910/pitch-integrity-monitor" target="_blank" rel="noopener">github.com/debi910/pitch-integrity-monitor</a></div></footer>
+<footer><div class="wrap">Pitch Integrity Monitor · AQX Sports Analytics Data Bowl 4.0 · Code: <a href="https://github.com/debi910/pitch-integrity-monitor" target="_blank" rel="noopener">github.com/debi910/pitch-integrity-monitor</a><p style="margin-top:10px;font-size:12px"><!--__CREDITS__--></p></div></footer>
 <div class="tip" id="tip"></div>
 
 <script>

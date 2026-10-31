@@ -27,13 +27,17 @@ def embed_images(html: str) -> str:
     """Inline web/img/<name>.jpg as data URIs; drop the <!--IMG:name--> block when the photo is absent."""
     import base64
     import re
-    credits = {}
+    credits, footer = {}, []
     cpath = ROOT / "web/img/CREDITS.md"
-    if cpath.exists():  # lines like: - hero.jpg: "Title" by Author, CC BY-SA 4.0, https://commons...
-        for line in cpath.read_text(encoding="utf-8").splitlines():
-            m = re.match(r"\s*[-*]\s*`?(\w+)\.jpg`?\s*[:|]\s*(.+)", line)
-            if m:
-                credits[m.group(1)] = re.sub(r"https?://\S+", "", m.group(2)).strip(" ,|")
+    if cpath.exists():  # "## hero.jpg (...)" then "- Author: ...", "- Licence: X (url)", "- Source: url"
+        for sec in re.split(r"^## ", cpath.read_text(encoding="utf-8"), flags=re.M)[1:]:
+            name = sec.split(".jpg")[0].strip()
+            f = dict(re.findall(r"^- (\w+): (.+)$", sec, flags=re.M))
+            lic = re.sub(r"\s*\(.*\)", "", f.get("Licence", ""))
+            credits[name] = f"{f.get('Author', '?')}, {lic}, Wikimedia Commons"
+            footer.append(f'<a href="{f.get("Source", "#")}" target="_blank" rel="noopener">{f.get("File", name)}</a> '
+                          f'by {f.get("Author", "?")} ({lic})')
+    html = html.replace("<!--__CREDITS__-->", "Photos: " + " · ".join(footer) if footer else "")
     for name in ["hero", "pitcher", "plate", "ball"]:
         img = ROOT / f"web/img/{name}.jpg"
         block = re.compile(rf"<!--IMG:{name}-->(.*?)<!--/IMG:{name}-->", re.S)
