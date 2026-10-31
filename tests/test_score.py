@@ -89,3 +89,14 @@ def test_power_grows_with_rigged_pitches_and_zero_is_rare():
     n, k, b = np.array([40, 40, 110]), np.array([2, 3, 7]), np.array([.06, .07, .06])
     hits = [detect(n, k, b, r).sum() for r in range(16)]
     assert hits == sorted(hits) and hits[0] == 0 and hits[-1] == 3
+
+
+def test_drift_is_live_only():
+    """Coach-mode drift for a month must not change when later months are removed."""
+    from pim.drift import pitcher_months
+    d = prepare(pd.read_parquet(SLIM))
+    full = pitcher_months(d)
+    part = pitcher_months(d[d["game_date"] < pd.Timestamp("2024-07-01")])
+    j = part.merge(full, on=["pitcher", "month"], suffixes=("_p", "_f"))
+    assert len(j) == len(part) > 0
+    assert np.allclose(j["drift_score_p"], j["drift_score_f"]) and np.allclose(j["wild_base_p"], j["wild_base_f"])

@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-31
+- PRE-REGISTRATION (coach mode): `pim/drift.py` (command + velocity drift vs own earlier months) and `eval/injury.py` (does drift precede an IL placement within 30 days? vs velocity-drop baseline) committed BEFORE any injured-list data was joined. Constants fixed here.
 - Linked deck, model card, data card, CI badge and CLI usage from README and page footer.
 - Analyst case file (section 03): the alert the live monitor would have issued on June 1 2025, with the 9 dirt first pitches, filing tags, Savant game links, next steps, innocent explanations, CSV export.
 - Detection-limit analysis (`eval/power.py`): rigged first pitches injected into all 8,339 real pitcher-months. Reliever caught 50% at 6/month, starter at 9; 1–2/month is invisible (≤2.4%). New chart in section 04, README table, 9th test.
