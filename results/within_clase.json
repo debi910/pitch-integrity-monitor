@@ -1,0 +1,60 @@
+{
+  "n_pitches": 2972,
+  "n_labels": 18,
+  "n_labels_unscored_by_pim": 0,
+  "prevalence": 0.006056527590847914,
+  "methods": {
+    "PIM (ours)": {
+      "avg_precision": 0.09742870724559184,
+      "hits_top18": 2,
+      "hits_top50": 4,
+      "hits_top100": 4,
+      "hits_top300": 8,
+      "median_rank": 350,
+      "median_top_pct": 11.776581426648722,
+      "ap_95ci": [
+        0.02161233686941214,
+        0.2882777677247109
+      ]
+    },
+    "B1 spiked-ball rule": {
+      "avg_precision": 0.19975592435492906,
+      "hits_top18": 5,
+      "hits_top50": 6,
+      "hits_top100": 10,
+      "hits_top300": 10,
+      "median_rank": 93,
+      "median_top_pct": 3.1292059219380883,
+      "ap_95ci": [
+        0.06008890248708807,
+        0.40677366420678257
+      ]
+    },
+    "B2 distance outside zone": {
+      "avg_precision": 0.18441877339593754,
+      "hits_top18": 4,
+      "hits_top50": 6,
+      "hits_top100": 7,
+      "hits_top300": 11,
+      "median_rank": 173,
+      "median_top_pct": 5.837819650067295,
+      "ap_95ci": [
+        0.04481327112065071,
+        0.40153503555679465
+      ]
+    },
+    "B3 random": {
+      "avg_precision": 0.005472228006986806,
+      "hits_top18": 0,
+      "hits_top50": 0,
+      "hits_top100": 0,
+      "hits_top300": 1,
+      "median_rank": 1490,
+      "median_top_pct": 50.1514131897712,
+      "ap_95ci": [
+        0.004734337916831638,
+        0.008050464489563869
+      ]
+    }
+  }
+}
